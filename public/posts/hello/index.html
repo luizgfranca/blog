@@ -7,7 +7,11 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Hello | My New Hugo Site</title>
 <meta name="keywords" content="">
-<meta name="description" content="Hello world post This is a hello world post just test how would one post on Hugo">
+<meta name="description" content="Hello world post This is a hello world post just test how would one post on Hugo
+This is an inline \(a^*=x-b^*\) equation.
+These are block equations:
+\[a^*=x-b^*\] \[ a^*=x-b^* \] \[ a^*=x-b^* \] These are also block equations:
+$$a^*=x-b^*$$ $$ a^*=x-b^* $$ $$ a^*=x-b^* $$ \[ \begin{aligned} KL(\hat{y} || y) &= \sum_{c=1}^{M}\hat{y}_c \log{\frac{\hat{y}_c}{y_c}} \\ JS(\hat{y} || y) &= \frac{1}{2}(KL(y||\frac{y&#43;\hat{y}}{2}) &#43; KL(\hat{y}||\frac{y&#43;\hat{y}}{2})) \end{aligned} \] ">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/hello/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.45e028aa8ce0961349adf411b013ee39406be2c0bc80d4ea3fc04555f7f4611a.css" integrity="sha256-ReAoqozglhNJrfQRsBPuOUBr4sC8gNTqP8BFVff0YRo=" rel="preload stylesheet" as="style">
@@ -56,6 +60,21 @@
 
     </style>
 </noscript>
+    
+      <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['\\(', '\\)']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+
+    
 </head>
 
 <body class="" id="top">
@@ -116,6 +135,25 @@
   <div class="post-content"><h1 id="hello-world-post">Hello world post<a hidden class="anchor" aria-hidden="true" href="#hello-world-post">#</a></h1>
 <p>This is a hello world post just test how would one post on Hugo</p>
 <p><img alt="Test image" loading="lazy" src="/posts/hello/hello.png"></p>
+<p>This is an inline \(a^*=x-b^*\) equation.</p>
+<p>These are block equations:</p>
+\[a^*=x-b^*\]
+\[ a^*=x-b^* \]
+\[
+a^*=x-b^*
+\]
+<p>These are also block equations:</p>
+$$a^*=x-b^*$$
+$$ a^*=x-b^* $$
+$$
+a^*=x-b^*
+$$
+\[
+\begin{aligned}
+KL(\hat{y} || y) &= \sum_{c=1}^{M}\hat{y}_c \log{\frac{\hat{y}_c}{y_c}} \\
+JS(\hat{y} || y) &= \frac{1}{2}(KL(y||\frac{y+\hat{y}}{2}) + KL(\hat{y}||\frac{y+\hat{y}}{2}))
+\end{aligned}
+\]
 
 
   </div>

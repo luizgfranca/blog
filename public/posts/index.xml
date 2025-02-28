@@ -10,10 +10,14 @@
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hello</title>
-      <link>http://localhost:1313/posts/hello/hello/</link>
+      <link>http://localhost:1313/posts/hello/</link>
       <pubDate>Thu, 27 Feb 2025 19:31:02 -0300</pubDate>
-      <guid>http://localhost:1313/posts/hello/hello/</guid>
-      <description>Hello world post This is a hello world post just test how would one post on Hugo</description>
+      <guid>http://localhost:1313/posts/hello/</guid>
+      <description>Hello world post This is a hello world post just test how would one post on Hugo
+This is an inline \(a^*=x-b^*\) equation.
+These are block equations:
+\[a^*=x-b^*\] \[ a^*=x-b^* \] \[ a^*=x-b^* \] These are also block equations:
+$$a^*=x-b^*$$ $$ a^*=x-b^* $$ $$ a^*=x-b^* $$ \[ \begin{aligned} KL(\hat{y} || y) &amp;= \sum_{c=1}^{M}\hat{y}_c \log{\frac{\hat{y}_c}{y_c}} \\ JS(\hat{y} || y) &amp;= \frac{1}{2}(KL(y||\frac{y+\hat{y}}{2}) + KL(\hat{y}||\frac{y+\hat{y}}{2})) \end{aligned} \] </description>
     </item>
   </channel>
 </rss>

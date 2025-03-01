@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Como calcular uma primeira medição instantânea de métricas sobre indicadores cumulativos em tempo real | Luiz G. França</title>
+<meta name="keywords" content="">
+<meta name="description" content="Suponha que precisamos calcular dados a partir de um indicador cumulativo para gerar gráficos ou métricas em tempo real para interpretação por parte dos usuários de uma aplicação. No entanto, esse indicador é gerenciado por um processo externo, e não temos como saber exatamente quando ele é atualizado. Quais estratégias podemos adotar para processar essas informações?
+Esse é um problema que encontrei em um projeto e que, a primeira vista, parece simples.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/002/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.45e028aa8ce0961349adf411b013ee39406be2c0bc80d4ea3fc04555f7f4611a.css" integrity="sha256-ReAoqozglhNJrfQRsBPuOUBr4sC8gNTqP8BFVff0YRo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/002/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+    
+      <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
+      inlineMath: [['\\(', '\\)']]                  
+    },
+    loader:{
+      load: ['ui/safe']
+    },
+  };
+</script>
+
+    
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Luiz G. França (Alt + H)">Luiz G. França</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Como calcular uma primeira medição instantânea de métricas sobre indicadores cumulativos em tempo real
+    </h1>
+    <div class="post-meta"><span title='2025-02-28 17:18:38 -0300 -03'>February 28, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>Suponha que precisamos calcular dados a partir de um indicador cumulativo para gerar gráficos ou métricas em tempo real para interpretação por parte dos usuários de uma aplicação. No entanto, esse indicador é gerenciado por um processo externo, e não temos como saber exatamente quando ele é atualizado. Quais estratégias podemos adotar para processar essas informações?</p>
+<p>Esse é um problema que encontrei em um projeto e que, a primeira vista, parece simples. No entanto, sua solução envolve algumas ideias interessantes, além de estar presente em várias funcionalidades de softwares com os quais interagimos no nosso dia a dia.</p>
+<p>Um exemplo de aplicação que lida diretamente com esse tipo de problema, e com a qual frequentemente interagimos, são os monitores de recursos do sistema, como o Monitor do Sistema (no Linux), Gerenciador de Tarefas (no Windows), ou ferramentas de monitoramentos de recursos de servidores. Essas aplicações lidam com esse problema para calcular os gráficos que mostram o volume de tráfego de rede dentro das interfaces de rede da máquina.</p>
+<p><img alt="image" loading="lazy" src="/posts/002/20250216150855.png"></p>
+<p>Esses gráficos são geralmente construídos da seguinte forma:</p>
+<p>O Sistema Operacional é responsável por coordenar a comunicação com o hardware. Ele processa os dados recebidos para montar os pacotes, envia-os para as aplicações, e também recebe pacotes das aplicações para serem processados e enviados ao hardware. Durante esse processo, o sistema, como intermediário de toda a comunicação, tem a capacidade de registrar estatísticas dos dados recebidos e enviados pelas interfaces de rede. Ele então acumula indicadores para refletir os dados que processou. No entanto, ele não mantém um histórico desses valores, uma vez que isso demandaria o uso crescente da memória RAM, o que eventualmente poderia sobrecarregar o sistema. Portanto ele salva apenas um indicador monotônico.</p>
+<p>No Linux, por exemplo, o sistema contabiliza os indicadores de entrada e saída como: bytes, pacotes, erros, drops, FIFO, frames, compressão e multicast no arquivo virtual <code>/proc/net/dev</code>.</p>
+<p><img alt="image" loading="lazy" src="/posts/002/20250216152007.png"></p>
+<p>Como no caso de exemplo a intenção é somente de calcular o volume de bytes recebidos ou enviados pelo adaptador uma aplicação de monitoramento pode usar o indicador <code>bytes</code>, ele é sempre incremental, e tem duas versões que contabilizam o total de bytes recebidos e enviados pela interface desde sua inicialização.</p>
+<p>Observando nosso indicador, vemos nossas premissas para esse problema:</p>
+<ul>
+<li>o indicador é sempre incremental</li>
+<li>não temos registro dos valores anteriores</li>
+<li>não temos controle de exatamente quando esse valor é atualizado</li>
+</ul>
+<p>Com isso, é possível usar essa aplicação do problema para investigar como calcular uma métrica com as mesmas condições. Para simplificar o exemplo, vamos focar apenas na taxa de download, mas as mesmas ideias também seriam aplicáveis à taxa de upload.</p>
+<p>Neste artigo, usando o exemplo, explorarei como gerar essas métricas e, de forma mais profunda, como abordar o cálculo do primeiro indicador em tempo real.</p>
+<h4 id="definindo-o-modelo-dos-dados">Definindo o modelo dos dados<a hidden class="anchor" aria-hidden="true" href="#definindo-o-modelo-dos-dados">#</a></h4>
+<p>Em primeiro lugar, o cálculo do indicador é razoavelmente simples, pois já existe um modelo de dados bem estabelecido para interpretar esse problema: as séries temporais (<em>time series</em>). Podemos definir um intervalo ∆t, que pode ser usado para capturar repetidamente os dados do indicador, e a partir desses dados construir a série temporal. Assim, cada registro da série seguiria o seguinte formato:</p>
+<p>(timestamp, bytes atuais)</p>
+<p>Então, a série pode ser definida como
+</p>
+\[
+\begin{aligned}
+S_{c} = (i=0,...n)\left\{ \left< t_{i},bytes_{i}\right>\right\}
+\end{aligned}
+\]
+<p>
+onde:
+</p>
+\[
+\begin{aligned}
+t_{x} = t_{0} + \Delta t \times x
+\end{aligned}
+\]
+<p>e i é um numero indicando o elemento atual (começando por zero)</p>
+<p>Claro, para critérios de eficiência, não seria viável manter toda a série em memória, pois ela cresce continuamente, o que eventualmente geraria um impacto significativo no uso de memória do sistema. O uso de séries simplifica a modelagem, e com ela definida podemos só manter em memória os registros que serão necessários para os cálculos naquele momento.</p>
+<p>A partir dessa série, podemos calcular a variação da velocidade de download em cada instante, gerando uma nova série:</p>
+\[
+\begin{aligned}
+S_{d} = (i=0,...n)\left\{ \left< t_{i},bytes_{i} - bytes_{i-1}\right>\right\}
+\end{aligned}
+\]
+<p>E a partir disso é possível personalizar a forma de atualizar o indicador de forma que ele fique mais amigável para o usuário, usando técnicas bem estabelecidas de processamento de séries temporais. Um bom exemplo para nosso caso de rede seria a de janelas móveis.</p>
+<p>Mas nosso indicador tem um problema, que é importante em algumas situações.</p>
+<h4 id="problemas-do-modelo">Problemas do modelo<a hidden class="anchor" aria-hidden="true" href="#problemas-do-modelo">#</a></h4>
+<p>Veja que na nossa time series derivada dependemos da presença de \( t_{i-1} \) para calcular \( t_{i} \), mas isso dependeria da existência de um \( t_{-1} \) para calcular \( t_{0} \), o que não é possível. Para grande parte das aplicações isso não é relevante, porque poderíamos computar o indicador a partir de i = 1, No entanto, isso impede que o indicador seja exibido imediatamente para o usuário, fazendo com que ele precise esperar ∆t para ver o primeiro valor, o que pode não ser muito legal para a aplicação, como é o caso do monitor de recursos, onde o usuário espera que o programa abra instantaneamente.</p>
+<p>Essa é a parte mais interessante desse problema sobre a qual eu não tinha encontrado nada mencionando antes, as técnicas para computar esse indicador de forma imediata.</p>
+<p>Apesar de nenhuma delas ser perfeita, elas exigem um olhar criativo para a solução do problema, o que leva a algumas ideias interessantes.</p>
+<h4 id="calculando-o-primeiro-item">Calculando o primeiro item<a hidden class="anchor" aria-hidden="true" href="#calculando-o-primeiro-item">#</a></h4>
+<p>A primeira técnica, que é a mais simples, mas que gera desvios significativos por não representar o estado atual, é simplesmente definir \( S_{d_{0}} = (t_{0}, 0) \), usando 0 como placeholder para primeira posição.</p>
+<p><img alt="image" loading="lazy" src="/posts/002/1st-approach.gif"></p>
+<p>Apesar da vantagem de ela ser mais simples, se o usuário que está usando a aplicação não souber desse comportamento, ele pode ter uma ideia errada de que o indicador aumentou repentinamente pouco depois de ele abrir seu monitoramento</p>
+<p>As próximas técnicas também dependem de certa forma de manipular os dados de forma não completamente precisa, mas de uma forma que informa melhor sobre o contexto atual.</p>
+<p>Mas para usar elas, primeiramente precisaríamos pensar no nosso modelo de dados de forma um pouco diferente.</p>
+<h4 id="novo-modelo-de-dados">Novo modelo de dados<a hidden class="anchor" aria-hidden="true" href="#novo-modelo-de-dados">#</a></h4>
+<p>Para as próximas técnicas, precisamos flexibilizar a dependência de que nossa coleta de dados sempre terá um intervalo ∆t.</p>
+<p>Para simplificar a definição da solução, vamos primeiramente definir a função \(vS_{d}(x)\) que retorna o valor da série Sc quando i = x.</p>
+<p>O que precisamos para as próximas abordagens é uma formula onde mesmo que o intervalo de tempo entre \(S_{c_{i}}\) e \(S_{c_{i-1}}\) usados seja diferente de Δt, ele seja comparável proporcionalmente aos demais itens da série. Uma forma de fazer isso é definindo Sd como:</p>
+\[
+\begin{aligned}
+S_{d} = (i=0,...n)\left\{ \left< t_{i},  (\frac{ \Delta t }{ t_{i} - t_{i-1} }) \times ( vS_{c}(i) - vS_{c}(i-1)  )   \right>\right\}
+\end{aligned}
+\]
+<p>Ou seja, para cada um dos itens da série \(S_{d}\), consideramos os 2 últimos itens da série \(S_{c}\), mas transformados proporcionalmente à relação entre o intervalo de tempo de coleta do indicador e o tempo padrão da série (∆t).</p>
+<p>Com essa definição de série \(S_{d}\), podemos prosseguir para as próximas soluções.</p>
+<h4 id="segunda-solução">Segunda solução<a hidden class="anchor" aria-hidden="true" href="#segunda-solução">#</a></h4>
+<p>A segunda abordagem surge ao percebermos que existe um único instante de tempo que sabemos que existe anterior a \( t_{0} \), que é o momento em que o indicador começou a ser incrementado (e o seu valor, que é zero) dado que ele é monotônico.</p>
+<p>Considerando isso, podemos definir um \( S_{c_{-1}} \) imaginário com esse valor, e começar a calcular nosso \( S_{d} \) a partir de i=0. Assim, o primeiro item de nossa série consistiria na média de variação desde o início do indicador.</p>
+<p>Usando o exemplo do cálculo da taxa de download, para essa abordagem, trocamos o <code>timestamp</code> pela variável de tempo <code>uptime</code> do sistema. O <code>uptime</code> conta quantos nanossegundos se passaram desde que o sistema foi ligado enquanto o <code>timestamp</code> conta a partir de 1 de janeiro de 1970. O <code>uptime</code> é útil para nós nessa abordagem porque ele é uma boa aproximação de quando nossa interface de rede iniciou seu funcionamento (e por consequência o indicador de bytes começou a ser incrementado). Seguindo essa estratégia poderíamos definir um \(S_{c_{-1}} = 0\) imaginário, e com isso nosso \(S_{d_{0}}\) seria efetivamente:</p>
+\[
+\begin{aligned}
+S_{d_{0}} = \frac{ \Delta t }{ t_{uptime} } \times vS_{c}(0)
+\end{aligned}
+\]
+<p>Que seria a média de uso desde que o computador foi ligado.</p>
+<p>Segue um exemplo de como um gráfico com sua computação pareceria em tempo real.</p>
+<p><img alt="image" loading="lazy" src="/posts/002/2nd-approach.gif"></p>
+<p>O problema desse caso é o fato de que a maior parte do contexto coletado para gerar o primeiro indicador é antigo, e pouco corresponde a realidade naquele momento. Por exemplo no gráfico acima, usando o monitoramento de rede, o usuário passou um grande período de tempo fazendo um download grande, mas agora está tendo uma carga de rede bem menor. nesse caso a velocidade de download inicial tem um desvio significativo para cima.</p>
+<p>Ainda assim essa abordagem é frequentemente usada, por exemplo, no System Monitor (equivalente ao gerenciador de tarefas do KDE Plasma) é assim que o grafico de uso de CPU calcula sua primeira posição.</p>
+<p><img alt="image" loading="lazy" src="/posts/002/20250224044328.png"></p>
+<h4 id="terceira-solução">Terceira solução<a hidden class="anchor" aria-hidden="true" href="#terceira-solução">#</a></h4>
+<p>Finalmente, a terceira abordagem (e minha favorita) para resolver o problema do primeiro ponto de dados parte da percepção humana do que consideramos como &ldquo;instantâneo&rdquo;.</p>
+<p>Nós humanos não conseguimos ver grande diferença entre períodos de tempo curtos, por exemplo entre algo que carrega em 100ms e algo que carrega em 300ms, mas notamos bastante essa diferença entre algo que carrega em 300ms e 900ms. Dessa forma, se tivermos um pequeno delay de até 300 milissegundos para a primeira abertura do nosso indicador, para um humano, este teria efetivamente um carregamento instantâneo em sua percepção.</p>
+<p>Podemos usar esse tempo para calcular um indicador relativo desse período de tempo menor. Para isso capturaríamos em um período de tempo menor que Δt, e (que é na prática imperceptível para o usuário (podemos defini-lo como Δdelay) a amostra \(S_{c_{0}}\) cujo tempo seria \(t_{0} + \Delta delay\), e consideraríamos nossa base imaginária \(S_{c_{-1}}\) com a nossa amostra em \(t_{0}\)</p>
+<p>Fazendo isso, na nossa série derivada, teriamos efetivamente na primeira posição:</p>
+\[
+\begin{aligned}
+S_{d_{0}} = \frac{\Delta t}{\Delta delay} \times vS_{c}( t_{0} + \Delta delay ) - vS_{c}(t_{0})
+\end{aligned}
+\]
+<p>Usando isso, seria possível calcular \(S_{d_{0}}\) utilizando apenas o tempo Δ<em>delay</em> ao invés de precisar esperar Δ<em>t</em>.</p>
+<p><img alt="image" loading="lazy" src="/posts/002/3rd-approach.gif"></p>
+<p>Essa abordagem tem a vantagem de que seus dados refletem uma velocidade mais atual, mas ela também tem um problema. Como não controlamos a taxa de atualização do processo interno que incrementa o indicador, nosso Δ<em>delay</em> tem que ser maior do que o pior caso de atualização desse valor, caso contrário o nosso primeiro resultado terá o comportamento da primeira abordagem.</p>
+<p>Além disso, se o sistema de atualização dos dados tiver um intervalo entre 0,5 e 0,999&hellip; vezes o ∆delay, o resultado pode apresentar um desvio de até 50% do valor correto.</p>
+<p>Ainda assim, essa solução é útil na maioria dos casos em que precisamos calcular o primeiro indicador em tempo real, embora não exista uma solução perfeita para esse tipo de problema.</p>
+<p>Por fim, como na maioria das situações de desenvolvimento, vemos mais um caso onde não existe uma solução perfeita, mas soluções com trade-offs que temos que avaliar e escolher de acordo com a natureza do problema que estamso resolvendo.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">Luiz G. França</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

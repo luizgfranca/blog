@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>My New Hugo Site</title>
+    <title>Luiz G. França</title>
     <link>http://localhost:1313/</link>
-    <description>Recent content on My New Hugo Site</description>
+    <description>Recent content on Luiz G. França</description>
     <generator>Hugo -- 0.126.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Feb 2025 19:31:02 -0300</lastBuildDate>
+    <lastBuildDate>Fri, 28 Feb 2025 17:18:38 -0300</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Hello</title>
-      <link>http://localhost:1313/posts/hello/</link>
-      <pubDate>Thu, 27 Feb 2025 19:31:02 -0300</pubDate>
-      <guid>http://localhost:1313/posts/hello/</guid>
-      <description>Hello world post This is a hello world post just test how would one post on Hugo
-This is an inline \(a^*=x-b^*\) equation.
-These are block equations:
-\[a^*=x-b^*\] \[ a^*=x-b^* \] \[ a^*=x-b^* \] These are also block equations:
-$$a^*=x-b^*$$ $$ a^*=x-b^* $$ $$ a^*=x-b^* $$ \[ \begin{aligned} KL(\hat{y} || y) &amp;= \sum_{c=1}^{M}\hat{y}_c \log{\frac{\hat{y}_c}{y_c}} \\ JS(\hat{y} || y) &amp;= \frac{1}{2}(KL(y||\frac{y+\hat{y}}{2}) + KL(\hat{y}||\frac{y+\hat{y}}{2})) \end{aligned} \] </description>
+      <title>Como calcular uma primeira medição instantânea de métricas sobre indicadores cumulativos em tempo real</title>
+      <link>http://localhost:1313/posts/002/</link>
+      <pubDate>Fri, 28 Feb 2025 17:18:38 -0300</pubDate>
+      <guid>http://localhost:1313/posts/002/</guid>
+      <description>Suponha que precisamos calcular dados a partir de um indicador cumulativo para gerar gráficos ou métricas em tempo real para interpretação por parte dos usuários de uma aplicação. No entanto, esse indicador é gerenciado por um processo externo, e não temos como saber exatamente quando ele é atualizado. Quais estratégias podemos adotar para processar essas informações?
+Esse é um problema que encontrei em um projeto e que, a primeira vista, parece simples.</description>
     </item>
   </channel>
 </rss>

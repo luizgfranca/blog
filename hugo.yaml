@@ -1,6 +1,6 @@
-baseURL: https://example.org/
+baseURL: https://luizgfc.github.io/
 languageCode: en-us
-title: My New Hugo Site
+title: Luiz G. França
 theme: ["PaperMod"]
 markup:
   goldmark:

@@ -31,7 +31,7 @@ Com isso, é possível usar essa aplicação do problema para investigar como ca
 
 Neste artigo, usando o exemplo, explorarei como gerar essas métricas e, de forma mais profunda, como abordar o cálculo do primeiro indicador em tempo real.
 
-#### Definindo o modelo dos dados
+# Definindo o modelo dos dados
 
 Em primeiro lugar, o cálculo do indicador é razoavelmente simples, pois já existe um modelo de dados bem estabelecido para interpretar esse problema: as séries temporais (_time series_). Podemos definir um intervalo ∆t, que pode ser usado para capturar repetidamente os dados do indicador, e a partir desses dados construir a série temporal. Assim, cada registro da série seguiria o seguinte formato:
 
@@ -66,7 +66,7 @@ E a partir disso é possível personalizar a forma de atualizar o indicador de f
 
 Mas nosso indicador tem um problema, que é importante em algumas situações.
 
-#### Problemas do modelo
+## Problemas do modelo
 
 Veja que na nossa time series derivada dependemos da presença de \( t_{i-1} \) para calcular \( t_{i} \), mas isso dependeria da existência de um \( t_{-1} \) para calcular \( t_{0} \), o que não é possível. Para grande parte das aplicações isso não é relevante, porque poderíamos computar o indicador a partir de i = 1, No entanto, isso impede que o indicador seja exibido imediatamente para o usuário, fazendo com que ele precise esperar ∆t para ver o primeiro valor, o que pode não ser muito legal para a aplicação, como é o caso do monitor de recursos, onde o usuário espera que o programa abra instantaneamente.
 
@@ -74,7 +74,7 @@ Essa é a parte mais interessante desse problema sobre a qual eu não tinha enco
 
 Apesar de nenhuma delas ser perfeita, elas exigem um olhar criativo para a solução do problema, o que leva a algumas ideias interessantes.
 
-#### Calculando o primeiro item
+# Calculando o primeiro item
 
 A primeira técnica, que é a mais simples, mas que gera desvios significativos por não representar o estado atual, é simplesmente definir \( S_{d_{0}} = (t_{0}, 0) \), usando 0 como placeholder para primeira posição.
 
@@ -87,7 +87,7 @@ As próximas técnicas também dependem de certa forma de manipular os dados de 
 
  Mas para usar elas, primeiramente precisaríamos pensar no nosso modelo de dados de forma um pouco diferente.
 
-#### Novo modelo de dados
+## Novo modelo de dados
 
 Para as próximas técnicas, precisamos flexibilizar a dependência de que nossa coleta de dados sempre terá um intervalo ∆t.
 
@@ -104,7 +104,7 @@ S_{d} = (i=0,...n)\left\{ \left< t_{i},  (\frac{ \Delta t }{ t_{i} - t_{i-1} }) 
 Ou seja, para cada um dos itens da série \(S_{d}\), consideramos os 2 últimos itens da série \(S_{c}\), mas transformados proporcionalmente à relação entre o intervalo de tempo de coleta do indicador e o tempo padrão da série (∆t).
 
 Com essa definição de série \(S_{d}\), podemos prosseguir para as próximas soluções.
-#### Segunda solução
+## Segunda solução
 
 A segunda abordagem surge ao percebermos que existe um único instante de tempo que sabemos que existe anterior a \( t_{0} \), que é o momento em que o indicador começou a ser incrementado (e o seu valor, que é zero) dado que ele é monotônico. 
 
@@ -129,7 +129,7 @@ O problema desse caso é o fato de que a maior parte do contexto coletado para g
 Ainda assim essa abordagem é frequentemente usada, por exemplo, no System Monitor (equivalente ao gerenciador de tarefas do KDE Plasma) é assim que o grafico de uso de CPU calcula sua primeira posição.
 
 ![image](20250224044328.png)
-#### Terceira solução
+## Terceira solução
 
 Finalmente, a terceira abordagem (e minha favorita) para resolver o problema do primeiro ponto de dados parte da percepção humana do que consideramos como "instantâneo".
 

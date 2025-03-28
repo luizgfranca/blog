@@ -3,6 +3,16 @@ languageCode: en-us
 title: Luiz G. França
 theme: ["PaperMod"]
 publishDir: "docs"
+enableEmoji: true
+enableInlineShortcodes: true
+pygmentsUseClasses: true
+languages:
+  en:
+    languageName: ":us:" 
+    weight: 1
+  pt:
+    languageName: 🇧🇷
+    weight: 2
 markup:
   goldmark:
     extensions:
@@ -18,4 +28,8 @@ markup:
             - \)
         enable: true
 params:
-  math: true
+  math: true 
+  displayFullLangName: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  defaultTheme: dark

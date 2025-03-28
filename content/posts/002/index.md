@@ -1,60 +1,62 @@
 +++
-title = 'Como calcular uma primeira medição instantânea de métricas sobre indicadores cumulativos em tempo real'
+title = 'How to Calculate an Initial Instantaneous Measurement of Metrics on Cumulative Indicators in Real Time'
 date = 2025-02-28T17:18:38-03:00
 draft = false
 +++
 
-Suponha que precisamos calcular dados a partir de um indicador cumulativo para gerar gráficos ou métricas em tempo real para interpretação por parte dos usuários de uma aplicação. No entanto, esse indicador é gerenciado por um processo externo, e não temos como saber exatamente quando ele é atualizado. Quais estratégias podemos adotar para processar essas informações?
+Suppose we need to calculate data from a cumulative indicator to generate real-time graphs or metrics for and application's users to look at. However, this indicator is managed by an external process, and we have no way of knowing exactly when it is updated. What strategies can we adopt to process this information?
 
-Esse é um problema que encontrei em um projeto e que, a primeira vista, parece simples. No entanto, sua solução envolve algumas ideias interessantes, além de estar presente em várias funcionalidades de softwares com os quais interagimos no nosso dia a dia.
+This is a problem I encountered in a project that initially seems simple. However, its solution involves some interesting ideas and it's present in various software features we interact with daily.
 
-Um exemplo de aplicação que lida diretamente com esse tipo de problema, e com a qual frequentemente interagimos, são os monitores de recursos do sistema, como o Monitor do Sistema (no Linux), Gerenciador de Tarefas (no Windows), ou ferramentas de monitoramentos de recursos de servidores. Essas aplicações lidam com esse problema para calcular os gráficos que mostram o volume de tráfego de rede dentro das interfaces de rede da máquina.
+A good example of an application that directly deals with this type of problem are system resource monitors, such as System Monitor (on Linux), Task Manager (on Windows), or server resource monitoring tools. These applications handle this problem to calculate graphs showing network traffic volume that passes through the machine's network interfaces.
 
 ![image](20250216150855.png)
 
-Esses gráficos são geralmente construídos da seguinte forma:
+These graphs are generally built using the following strategy:
 
-O Sistema Operacional é responsável por coordenar a comunicação com o hardware. Ele processa os dados recebidos para montar os pacotes, envia-os para as aplicações, e também recebe pacotes das aplicações para serem processados e enviados ao hardware. Durante esse processo, o sistema, como intermediário de toda a comunicação, tem a capacidade de registrar estatísticas dos dados recebidos e enviados pelas interfaces de rede. Ele então acumula indicadores para refletir os dados que processou. No entanto, ele não mantém um histórico desses valores, uma vez que isso demandaria o uso crescente da memória RAM, o que eventualmente poderia sobrecarregar o sistema. Portanto ele salva apenas um indicador monotônico.
+The Operating System is responsible for coordinating hardware communication. It processes received data to assemble packets, sends them to applications, and also receives packets from applications to be processed and sent to the hardware. During this process, the system, as an intermediary for all communication, can record statistics of data received and sent by network interfaces. It then accumulates indicators to reflect the data it has processed. However, it doesn't maintain a history of these values, as this would require the RAM usage to always be growing, creating a memory leak. Therefore, it saves only a monotonic indicator.
 
-No Linux, por exemplo, o sistema contabiliza os indicadores de entrada e saída como: bytes, pacotes, erros, drops, FIFO, frames, compressão e multicast no arquivo virtual `/proc/net/dev`.
+In Linux, for example, the system accounts for input and output indicators such as: bytes, packets, errors, drops, FIFO, frames, compression, and multicast in the virtual file `/proc/net/dev`.
 
 ![image](20250216152007.png)
 
-Como no caso de exemplo a intenção é somente de calcular o volume de bytes recebidos ou enviados pelo adaptador uma aplicação de monitoramento pode usar o indicador `bytes`, ele é sempre incremental, e tem duas versões que contabilizam o total de bytes recebidos e enviados pela interface desde sua inicialização.
+Given that in our example case, the intention is only to calculate the volume of bytes received or sent by the adapter, a monitoring application can use the `bytes` indicator, which is always incremental and has two versions that account for the total bytes received and sent by the interface since its initialization.
 
-Observando nosso indicador, vemos nossas premissas para esse problema:
-- o indicador é sempre incremental
-- não temos registro dos valores anteriores
-- não temos controle de exatamente quando esse valor é atualizado
+Looking at our indicator, we see the premises our problem:
 
-Com isso, é possível usar essa aplicação do problema para investigar como calcular uma métrica com as mesmas condições. Para simplificar o exemplo, vamos focar apenas na taxa de download, mas as mesmas ideias também seriam aplicáveis à taxa de upload.
+- The indicator is always incremental
+- We have no record of previous values
+- We have no control over exactly when this value is updated
 
-Neste artigo, usando o exemplo, explorarei como gerar essas métricas e, de forma mais profunda, como abordar o cálculo do primeiro indicador em tempo real.
+With this, it's possible to use this application of the problem to investigate how to calculate a metric under the same conditions. To simplify the example, we'll focus only on the download rate, but the same ideas would also apply to the upload rate.
 
-# Definindo o modelo dos dados
+In this article, using the example, I'll explore how to generate these metrics and, more deeply, how to approach calculating the first real-time indicator.
 
-Em primeiro lugar, o cálculo do indicador é razoavelmente simples, pois já existe um modelo de dados bem estabelecido para interpretar esse problema: as séries temporais (_time series_). Podemos definir um intervalo ∆t, que pode ser usado para capturar repetidamente os dados do indicador, e a partir desses dados construir a série temporal. Assim, cada registro da série seguiria o seguinte formato:
+# Defining the Data Model
 
-(timestamp, bytes atuais)
+First, the indicator calculation is fairly simple, as there's already a well-established data model for interpreting this kind of problem: a time series. We can define a  ∆t interval, which can be used to repeatedly capture indicator data, and from this data build the time series. Therefore, each record in the series would follow the following format:
 
-Então, a série pode ser definida como
+(timestamp, current bytes)
+
+Then, the series can be defined as 
+
 \[
 \begin{aligned}
 S_{c} = (i=0,...n)\left\{ \left< t_{i},bytes_{i}\right>\right\}
 \end{aligned}
 \]
-onde:
+where:
 \[
 \begin{aligned}
 t_{x} = t_{0} + \Delta t \times x
 \end{aligned}
 \]
 
-e i é um numero indicando o elemento atual (começando por zero)
+and i is a number indicating the current element (starting from zero)
 
-Claro, para critérios de eficiência, não seria viável manter toda a série em memória, pois ela cresce continuamente, o que eventualmente geraria um impacto significativo no uso de memória do sistema. O uso de séries simplifica a modelagem, e com ela definida podemos só manter em memória os registros que serão necessários para os cálculos naquele momento.
+Of course, for efficiency reasons, it wouldn't be feasible to keep the entire series in memory, as it grows continuously, which would eventually generate a significant impact on system memory usage. The use of time series simplifies the modeling, and with it defined, we can keep in memory only the records needed for calculations at that time.
 
-A partir dessa série, podemos calcular a variação da velocidade de download em cada instante, gerando uma nova série:
+Using this series, we can now calculate the variation in download speed at each instant, generating a new series:
 
 \[
 \begin{aligned}
@@ -62,38 +64,37 @@ S_{d} = (i=0,...n)\left\{ \left< t_{i},bytes_{i} - bytes_{i-1}\right>\right\}
 \end{aligned}
 \]
 
-E a partir disso é possível personalizar a forma de atualizar o indicador de forma que ele fique mais amigável para o usuário, usando técnicas bem estabelecidas de processamento de séries temporais. Um bom exemplo para nosso caso de rede seria a de janelas móveis.
+And from this, it's possible to customize how to update the indicator to make it more user-friendly, using well-established time series processing techniques. A good example for our network case would be moving windows.
 
-Mas nosso indicador tem um problema, que é importante em algumas situações.
+But our indicator has a problem, which is important in some situations.
 
-## Problemas do modelo
+## Problems with the Model
 
-Veja que na nossa time series derivada dependemos da presença de \( t_{i-1} \) para calcular \( t_{i} \), mas isso dependeria da existência de um \( t_{-1} \) para calcular \( t_{0} \), o que não é possível. Para grande parte das aplicações isso não é relevante, porque poderíamos computar o indicador a partir de i = 1, No entanto, isso impede que o indicador seja exibido imediatamente para o usuário, fazendo com que ele precise esperar ∆t para ver o primeiro valor, o que pode não ser muito legal para a aplicação, como é o caso do monitor de recursos, onde o usuário espera que o programa abra instantaneamente.
+Notice that in our derived time series, we depend on the presence of \( t_{i-1} \) to calculate \( t_{i} \), but this would depend on the existence of a \( t_{-1} \) to calculate \( t_{0} \), which isn't possible. For many applications, this isn't relevant, because we could compute the indicator only from \(i = 1\). However, this prevents the indicator from being displayed immediately to the user, forcing them to wait ∆t to see the first value, which might not be ideal for the application's needs, as is the case with a resource monitor, where the user expects the program to open instantly.
 
-Essa é a parte mais interessante desse problema sobre a qual eu não tinha encontrado nada mencionando antes, as técnicas para computar esse indicador de forma imediata. 
+This is the most interesting part of this problem that I hadn't seen mentioned before: techniques for computing this indicator immediately.
 
-Apesar de nenhuma delas ser perfeita, elas exigem um olhar criativo para a solução do problema, o que leva a algumas ideias interessantes.
+Although none of them is perfect, they require a creative outlook on the problem, which leads to some interesting ideas.
 
-# Calculando o primeiro item
+# Calculating the First Item
 
-A primeira técnica, que é a mais simples, mas que gera desvios significativos por não representar o estado atual, é simplesmente definir \( S_{d_{0}} = (t_{0}, 0) \), usando 0 como placeholder para primeira posição.
+The first technique, which is the simplest but has significant deviations  representing the current state, is to simply define \( S_{d_{0}} = (t_{0}, 0) \), using 0 as a placeholder for the first position.
 
 ![image](1st-approach.gif)
 
+Despite the advantage of being simpler, if the user doesn't know about this behavior, they might get the wrong idea that the indicator suddenly jumped right after opening the monitoring tool.
 
-Apesar da vantagem de ela ser mais simples, se o usuário que está usando a aplicação não souber desse comportamento, ele pode ter uma ideia errada de que o indicador aumentou repentinamente pouco depois de ele abrir seu monitoramento
+The next techniques also depend somewhat on manipulating the data in a not completely accurate way, but in a way that better informs the user about the current context.
 
-As próximas técnicas também dependem de certa forma de manipular os dados de forma não completamente precisa, mas de uma forma que informa melhor sobre o contexto atual. 
+But to use them, we would first need to think about our data model a little differently.
 
- Mas para usar elas, primeiramente precisaríamos pensar no nosso modelo de dados de forma um pouco diferente.
+## New Data Model
 
-## Novo modelo de dados
+For the next techniques, we will need to loosen our dependency on the fact that our data will be collected exactly between each ∆t interval .
 
-Para as próximas técnicas, precisamos flexibilizar a dependência de que nossa coleta de dados sempre terá um intervalo ∆t.
+To simplify the definition of the solution, let's first define the function \(vS_{d}(x)\) that returns the value of the series \(S_{c}\) when i = x.
 
-Para simplificar a definição da solução, vamos primeiramente definir a função \(vS_{d}(x)\) que retorna o valor da série Sc quando i = x.
-
-O que precisamos para as próximas abordagens é uma formula onde mesmo que o intervalo de tempo entre \(S_{c_{i}}\) e \(S_{c_{i-1}}\) usados seja diferente de Δt, ele seja comparável proporcionalmente aos demais itens da série. Uma forma de fazer isso é definindo Sd como:
+What we need for the next approaches is a formula where even if the time interval between \(S_{c_{i}}\) and \(S_{c_{i-1}}\) used is different from Δt, it's proportionally comparable to the other items in the series. One way to do this is by defining \(S_{d}\) as:
 
 \[
 \begin{aligned}
@@ -101,16 +102,17 @@ S_{d} = (i=0,...n)\left\{ \left< t_{i},  (\frac{ \Delta t }{ t_{i} - t_{i-1} }) 
 \end{aligned}
 \]
 
-Ou seja, para cada um dos itens da série \(S_{d}\), consideramos os 2 últimos itens da série \(S_{c}\), mas transformados proporcionalmente à relação entre o intervalo de tempo de coleta do indicador e o tempo padrão da série (∆t).
+In other words, for each item in the \(S_{d}\) series, we consider the last 2 items of the \(S_{c}\) series, but converted proportionally to the relationship between its measurement time interval and the standard series time \(∆t\).
 
-Com essa definição de série \(S_{d}\), podemos prosseguir para as próximas soluções.
-## Segunda solução
+With this definition of the \(S_{d}\) series, we can proceed to the next solutions.
 
-A segunda abordagem surge ao percebermos que existe um único instante de tempo que sabemos que existe anterior a \( t_{0} \), que é o momento em que o indicador começou a ser incrementado (e o seu valor, que é zero) dado que ele é monotônico. 
+## Second Solution
 
-Considerando isso, podemos definir um \( S_{c_{-1}} \) imaginário com esse valor, e começar a calcular nosso \( S_{d} \) a partir de i=0. Assim, o primeiro item de nossa série consistiria na média de variação desde o início do indicador.
+The second approach arises when we realize that there is a single moment in time that we know exists prior to \( t_{0} \), which is the moment the indicator began to be incremented (and its value, which is zero) given that it is monotonic.
 
-Usando o exemplo do cálculo da taxa de download, para essa abordagem, trocamos o `timestamp` pela variável de tempo `uptime` do sistema. O `uptime` conta quantos nanossegundos se passaram desde que o sistema foi ligado enquanto o `timestamp` conta a partir de 1 de janeiro de 1970. O `uptime` é útil para nós nessa abordagem porque ele é uma boa aproximação de quando nossa interface de rede iniciou seu funcionamento (e por consequência o indicador de bytes começou a ser incrementado). Seguindo essa estratégia poderíamos definir um \(S_{c_{-1}} = 0\) imaginário, e com isso nosso \(S_{d_{0}}\) seria efetivamente:
+Considering this, we can define an imaginary \( S_{c_{-1}} \) with this value, and start calculating our \( S_{d} \) from i=0. Thus, the first item in our series would consist of the average variation since the beginning of the indicator.
+
+Using the download rate calculation example, for this approach, we would need to replace the `timestamp` with the system's `uptime` time variable. The `uptime` counts how many nanoseconds have passed since the system was turned on, while the `timestamp` counts from January 1, 1970. The `uptime` is useful for us in this approach because it's a good approximation of when our network interface started working (and consequently when the bytes indicator began to be incremented). Following this strategy, we could define an imaginary \(S_{c_{-1}} = 0\), and with this, our \(S_{d_{0}}\) would effectively be:
 
 \[
 \begin{aligned}
@@ -118,26 +120,27 @@ S_{d_{0}} = \frac{ \Delta t }{ t_{uptime} } \times vS_{c}(0)
 \end{aligned}
 \]
 
-Que seria a média de uso desde que o computador foi ligado. 
+Which would be the average usage since the computer was turned on.
 
-Segue um exemplo de como um gráfico com sua computação pareceria em tempo real.
+Here's an example of what a graph with this computation might look like in real-time.
 
 ![image](2nd-approach.gif)
 
-O problema desse caso é o fato de que a maior parte do contexto coletado para gerar o primeiro indicador é antigo, e pouco corresponde a realidade naquele momento. Por exemplo no gráfico acima, usando o monitoramento de rede, o usuário passou um grande período de tempo fazendo um download grande, mas agora está tendo uma carga de rede bem menor. nesse caso a velocidade de download inicial tem um desvio significativo para cima.
+The problem in this case is that most of the context collected to generate the first indicator is old and may not correspond much with the current reality. For example, in the graph above, using network monitoring, the user spent a long period of time doing a large download, but now has a much smaller network load. In this case, the initial download speed has a significant upward deviation.
 
-Ainda assim essa abordagem é frequentemente usada, por exemplo, no System Monitor (equivalente ao gerenciador de tarefas do KDE Plasma) é assim que o grafico de uso de CPU calcula sua primeira posição.
+Nevertheless, this approach is frequently used. For example, in System Monitor (equivalent to Task Manager for KDE), this is how the CPU usage graph calculates its first position.
 
 ![image](20250224044328.png)
-## Terceira solução
 
-Finalmente, a terceira abordagem (e minha favorita) para resolver o problema do primeiro ponto de dados parte da percepção humana do que consideramos como "instantâneo".
+## Third Solution
 
-Nós humanos não conseguimos ver grande diferença entre períodos de tempo curtos, por exemplo entre algo que carrega em 100ms e algo que carrega em 300ms, mas notamos bastante essa diferença entre algo que carrega em 300ms e 900ms. Dessa forma, se tivermos um pequeno delay de até 300 milissegundos para a primeira abertura do nosso indicador, para um humano, este teria efetivamente um carregamento instantâneo em sua percepção.
+Finally, the third approach (and my favorite) to solve the problem of the first data point stems from human perception of what we consider "instantaneous."
 
-Podemos usar esse tempo para calcular um indicador relativo desse período de tempo menor. Para isso capturaríamos em um período de tempo menor que Δt, e (que é na prática imperceptível para o usuário (podemos defini-lo como Δdelay) a amostra \(S_{c_{0}}\) cujo tempo seria \(t_{0} + \Delta delay\), e consideraríamos nossa base imaginária \(S_{c_{-1}}\) com a nossa amostra em \(t_{0}\)
+We humans can't see much difference between short time intervals, for example, between something that loads in 100ms and something that loads in 300ms, but we start to notice a lot more the difference between something that loads in 300ms and 900ms. Thus, if we have a small delay of up to 300 milliseconds for the first opening of our indicator, to a human, this would effectively load instantly in their perception.
 
-Fazendo isso, na nossa série derivada, teriamos efetivamente na primeira posição:
+We can use this time to calculate a relative indicator for this shorter time interval. For this, we would capture in a time period shorter than Δt, and (which is in practice imperceptible to the user, we can define it as Δdelay) the sample \(S_{c_{0}}\) whose time would be \(t_{0} + \Delta delay\), and we would consider our imaginary base \(S_{c_{-1}}\) with our sample at \(t_{0}\)
+
+Doing this, in our derived series, we would effectively have in the first position:
 
 \[
 \begin{aligned}
@@ -145,17 +148,14 @@ S_{d_{0}} = \frac{\Delta t}{\Delta delay} \times vS_{c}( t_{0} + \Delta delay ) 
 \end{aligned}
 \]
 
-Usando isso, seria possível calcular \(S_{d_{0}}\) utilizando apenas o tempo Δ*delay* ao invés de precisar esperar Δ*t*.
+Using this, it would be possible to calculate \(S_{d_{0}}\) using only Δ*delay* time instead of having to wait Δ*t*.
 
 ![image](3rd-approach.gif)
 
-Essa abordagem tem a vantagem de que seus dados refletem uma velocidade mais atual, mas ela também tem um problema. Como não controlamos a taxa de atualização do processo interno que incrementa o indicador, nosso Δ*delay* tem que ser maior do que o pior caso de atualização desse valor, caso contrário o nosso primeiro resultado terá o comportamento da primeira abordagem.
+This approach has the advantage that its data reflects a more current speed, but it also has a problem. Since we don't control the update rate of the internal process that increments the indicator, our Δ*delay* has to be greater than the worst case of updating this value, otherwise our first result will have the behavior of the first approach.
 
-Além disso, se o sistema de atualização dos dados tiver um intervalo entre 0,5 e 0,999... vezes o ∆delay, o resultado pode apresentar um desvio de até 50% do valor correto.
+Additionally, if the agent that updates the datasource has an interval between 0.5 and 0.999... times the ∆delay, the result may show a deviation of up to 50% from the correct value.
 
-Ainda assim, essa solução é útil na maioria dos casos em que precisamos calcular o primeiro indicador em tempo real, embora não exista uma solução perfeita para esse tipo de problema. 
+Still, this solution is useful in most cases where we need to calculate the first indicator in real-time, although there is no perfect solution for this type of problem.
 
-
-Por fim, como na maioria das situações de desenvolvimento, vemos mais um caso onde não existe uma solução perfeita, mas soluções com trade-offs que temos que avaliar e escolher de acordo com a natureza do problema que estamso resolvendo.
-
-
+Finally, as in most development situations, we see another case where there is no perfect solution, but solutions with trade-offs that we have to evaluate and choose according to the nature of the problem we are solving.

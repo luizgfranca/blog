@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Luiz G. França</title>
-    <link>http://localhost:1313/blog/posts/</link>
+    <link>https://luizgfranca.github.io/blog/posts/</link>
     <description>Recent content in Posts on Luiz G. França</description>
     <generator>Hugo -- 0.126.2</generator>
     <language>en</language>
     <lastBuildDate>Fri, 28 Feb 2025 17:18:38 -0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://luizgfranca.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How to Calculate an Initial Instantaneous Measurement of Metrics on Cumulative Indicators in Real Time</title>
-      <link>http://localhost:1313/blog/posts/002/</link>
+      <link>https://luizgfranca.github.io/blog/posts/002/</link>
       <pubDate>Fri, 28 Feb 2025 17:18:38 -0300</pubDate>
-      <guid>http://localhost:1313/blog/posts/002/</guid>
+      <guid>https://luizgfranca.github.io/blog/posts/002/</guid>
       <description>Suppose we need to calculate data from a cumulative indicator to generate real-time graphs or metrics for and application&amp;rsquo;s users to look at. However, this indicator is managed by an external process, and we have no way of knowing exactly when it is updated. What strategies can we adopt to process this information?
 This is a problem I encountered in a project that initially seems simple. However, its solution involves some interesting ideas and it&amp;rsquo;s present in various software features we interact with daily.</description>
     </item>

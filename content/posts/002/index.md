@@ -30,7 +30,7 @@ Looking at our indicator, we see the premises our problem:
 
 With this, it's possible to use this application of the problem to investigate how to calculate a metric under the same conditions. To simplify the example, we'll focus only on the download rate, but the same ideas would also apply to the upload rate.
 
-In this article, using the example, I'll explore how to generate these metrics and, more deeply, how to approach calculating the first real-time indicator.
+In this article, using the example, I'll explore how to generate these metrics and, more deeply, how to approach calculating the first real-time indicator. The code for generating the graphs for our practical exmaple is a simple script I created and it's available in this public [GitHub repo](https://github.com/luizgfranca/netload-down-speed-monitor-demo/tree/master).
 
 # Defining the Data Model
 

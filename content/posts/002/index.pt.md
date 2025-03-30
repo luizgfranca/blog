@@ -29,7 +29,7 @@ Observando nosso indicador, vemos nossas premissas para esse problema:
 
 Com isso, é possível usar essa aplicação do problema para investigar como calcular uma métrica com as mesmas condições. Para simplificar o exemplo, vamos focar apenas na taxa de download, mas as mesmas ideias também seriam aplicáveis à taxa de upload.
 
-Neste artigo, usando o exemplo, explorarei como gerar essas métricas e, de forma mais profunda, como abordar o cálculo do primeiro indicador em tempo real.
+Neste artigo, usando o exemplo, explorarei como gerar essas métricas e, de forma mais profunda, como abordar o cálculo do primeiro indicador em tempo real. O código para gerar os gráficos do nosso exemplo é um pequeno script que deixei disponível [nesse repositório do GitHub](https://github.com/luizgfranca/netload-down-speed-monitor-demo/tree/master).
 
 # Definindo o modelo dos dados
 

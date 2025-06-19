@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Luiz G. França</title>
-    <link>https://luizgfranca.github.io/blog/pt/posts/</link>
+    <link>http://localhost:1313/blog/pt/posts/</link>
     <description>Recent content in Posts on Luiz G. França</description>
-    <generator>Hugo -- 0.126.2</generator>
+    <generator>Hugo</generator>
     <language>pt</language>
     <lastBuildDate>Fri, 28 Feb 2025 17:18:38 -0300</lastBuildDate>
-    <atom:link href="https://luizgfranca.github.io/blog/pt/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/blog/pt/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Como calcular uma primeira medição instantânea de métricas sobre indicadores cumulativos em tempo real</title>
-      <link>https://luizgfranca.github.io/blog/pt/posts/002/</link>
+      <link>http://localhost:1313/blog/pt/posts/002/</link>
       <pubDate>Fri, 28 Feb 2025 17:18:38 -0300</pubDate>
-      <guid>https://luizgfranca.github.io/blog/pt/posts/002/</guid>
-      <description>Suponha que precisamos calcular dados a partir de um indicador cumulativo para gerar gráficos ou métricas em tempo real para interpretação por parte dos usuários de uma aplicação. No entanto, esse indicador é gerenciado por um processo externo, e não temos como saber exatamente quando ele é atualizado. Quais estratégias podemos adotar para processar essas informações?
-Esse é um problema que encontrei em um projeto e que, a primeira vista, parece simples.</description>
+      <guid>http://localhost:1313/blog/pt/posts/002/</guid>
+      <description>&lt;p&gt;Suponha que precisamos calcular dados a partir de um indicador cumulativo para gerar gráficos ou métricas em tempo real para interpretação por parte dos usuários de uma aplicação. No entanto, esse indicador é gerenciado por um processo externo, e não temos como saber exatamente quando ele é atualizado. Quais estratégias podemos adotar para processar essas informações?&lt;/p&gt;&#xA;&lt;p&gt;Esse é um problema que encontrei em um projeto e que, a primeira vista, parece simples. No entanto, sua solução envolve algumas ideias interessantes, além de estar presente em várias funcionalidades de softwares com os quais interagimos no nosso dia a dia.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

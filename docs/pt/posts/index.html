@@ -10,7 +10,7 @@
 <meta name="description" content="Posts - Luiz G. França">
 <meta name="author" content="">
 <link rel="canonical" href="https://luizgfranca.github.io/blog/pt/posts/">
-<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.45e028aa8ce0961349adf411b013ee39406be2c0bc80d4ea3fc04555f7f4611a.css" integrity="sha256-ReAoqozglhNJrfQRsBPuOUBr4sC8gNTqP8BFVff0YRo=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://luizgfranca.github.io/blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://luizgfranca.github.io/blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://luizgfranca.github.io/blog/favicon-32x32.png">
@@ -29,10 +29,7 @@
         }
 
     </style>
-</noscript>
-  
-
-<meta property="og:url" content="https://luizgfranca.github.io/blog/pt/posts/">
+</noscript><meta property="og:url" content="https://luizgfranca.github.io/blog/pt/posts/">
   <meta property="og:site_name" content="Luiz G. França">
   <meta property="og:title" content="Posts">
   <meta property="og:locale" content="pt">
@@ -56,21 +53,6 @@
   ]
 }
 </script>
-    
-      <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-<script>
-  MathJax = {
-    tex: {
-      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
-      inlineMath: [['\\(', '\\)']]                  
-    },
-    loader:{
-      load: ['ui/safe']
-    },
-  };
-</script>
-
-    
 </head>
 
 <body class="list dark" id="top">
@@ -86,7 +68,7 @@
         <div class="logo">
             <a href="https://luizgfranca.github.io/blog/pt/" accesskey="h" title="Luiz G. França (Alt + H)">Luiz G. França</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -127,12 +109,28 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor.
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).
+try { const response1 = await fetch(&#39;http://localhost:3000/events&#39;); const data1 = await response1.json(); console.log(&#39;First request response:&#39;, data1); const response2 = await fetch(&#39;http://localhost:3000/events&#39;); const data2 = await response2.json(); console.log(&#39;Second request response:&#39;, data2); } catch (error) { console.error(&#39;Error making requests:&#39;, error); } Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!
+Isso porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-06-19 16:59:50 -0300 -03'>junho 19, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor." href="https://luizgfranca.github.io/blog/pt/posts/003/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Como calcular uma primeira medição instantânea de métricas sobre indicadores cumulativos em tempo real
     </h2>
   </header>
   <div class="entry-content">
     <p>Suponha que precisamos calcular dados a partir de um indicador cumulativo para gerar gráficos ou métricas em tempo real para interpretação por parte dos usuários de uma aplicação. No entanto, esse indicador é gerenciado por um processo externo, e não temos como saber exatamente quando ele é atualizado. Quais estratégias podemos adotar para processar essas informações?
-Esse é um problema que encontrei em um projeto e que, a primeira vista, parece simples....</p>
+Esse é um problema que encontrei em um projeto e que, a primeira vista, parece simples. No entanto, sua solução envolve algumas ideias interessantes, além de estar presente em várias funcionalidades de softwares com os quais interagimos no nosso dia a dia.
+...</p>
   </div>
   <footer class="entry-footer"><span title='2025-02-28 17:18:38 -0300 -03'>fevereiro 28, 2025</span></footer>
   <a class="entry-link" aria-label="post link to Como calcular uma primeira medição instantânea de métricas sobre indicadores cumulativos em tempo real" href="https://luizgfranca.github.io/blog/pt/posts/002/"></a>

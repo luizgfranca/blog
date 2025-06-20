@@ -2,67 +2,80 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/blog/pt/posts/002/</loc>
+    <loc>https://luizgfranca.github.io/blog/pt/</loc>
+    <lastmod>2025-06-19T16:59:50-03:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://luizgfranca.github.io/blog/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://luizgfranca.github.io/blog/pt/"
+                />
+  </url><url>
+    <loc>https://luizgfranca.github.io/blog/pt/posts/003/</loc>
+    <lastmod>2025-06-19T16:59:50-03:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://luizgfranca.github.io/blog/posts/003/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://luizgfranca.github.io/blog/pt/posts/003/"
+                />
+  </url><url>
+    <loc>https://luizgfranca.github.io/blog/pt/posts/</loc>
+    <lastmod>2025-06-19T16:59:50-03:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://luizgfranca.github.io/blog/posts/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://luizgfranca.github.io/blog/pt/posts/"
+                />
+  </url><url>
+    <loc>https://luizgfranca.github.io/blog/pt/posts/002/</loc>
     <lastmod>2025-02-28T17:18:38-03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/blog/posts/002/"
+                href="https://luizgfranca.github.io/blog/posts/002/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="http://localhost:1313/blog/pt/posts/002/"
+                href="https://luizgfranca.github.io/blog/pt/posts/002/"
                 />
   </url><url>
-    <loc>http://localhost:1313/blog/pt/</loc>
-    <lastmod>2025-02-28T17:18:38-03:00</lastmod>
+    <loc>https://luizgfranca.github.io/blog/pt/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/blog/"
+                href="https://luizgfranca.github.io/blog/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="http://localhost:1313/blog/pt/"
+                href="https://luizgfranca.github.io/blog/pt/categories/"
                 />
   </url><url>
-    <loc>http://localhost:1313/blog/pt/posts/</loc>
-    <lastmod>2025-02-28T17:18:38-03:00</lastmod>
+    <loc>https://luizgfranca.github.io/blog/pt/tags/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="http://localhost:1313/blog/posts/"
+                href="https://luizgfranca.github.io/blog/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="http://localhost:1313/blog/pt/posts/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/blog/pt/categories/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/blog/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="pt"
-                href="http://localhost:1313/blog/pt/categories/"
-                />
-  </url><url>
-    <loc>http://localhost:1313/blog/pt/tags/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="http://localhost:1313/blog/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="pt"
-                href="http://localhost:1313/blog/pt/tags/"
+                href="https://luizgfranca.github.io/blog/pt/tags/"
                 />
   </url>
 </urlset>

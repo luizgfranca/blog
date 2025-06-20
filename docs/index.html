@@ -2,7 +2,7 @@
 <html lang="en" dir="auto">
 
 <head>
-	<meta name="generator" content="Hugo 0.126.2"><meta charset="utf-8">
+	<meta name="generator" content="Hugo 0.147.8"><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
@@ -11,7 +11,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="canonical" href="https://luizgfranca.github.io/blog/">
-<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.45e028aa8ce0961349adf411b013ee39406be2c0bc80d4ea3fc04555f7f4611a.css" integrity="sha256-ReAoqozglhNJrfQRsBPuOUBr4sC8gNTqP8BFVff0YRo=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://luizgfranca.github.io/blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://luizgfranca.github.io/blog/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://luizgfranca.github.io/blog/favicon-32x32.png">
@@ -30,10 +30,7 @@
         }
 
     </style>
-</noscript>
-  
-
-<meta property="og:url" content="https://luizgfranca.github.io/blog/">
+</noscript><meta property="og:url" content="https://luizgfranca.github.io/blog/">
   <meta property="og:site_name" content="Luiz G. França">
   <meta property="og:title" content="Luiz G. França">
   <meta property="og:locale" content="en">
@@ -55,21 +52,6 @@
   ]
 }
 </script>
-    
-      <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-<script>
-  MathJax = {
-    tex: {
-      displayMath: [['\\[', '\\]'], ['$$', '$$']],  
-      inlineMath: [['\\(', '\\)']]                  
-    },
-    loader:{
-      load: ['ui/safe']
-    },
-  };
-</script>
-
-    
 </head>
 
 <body class="list dark" id="top">
@@ -85,7 +67,7 @@
         <div class="logo">
             <a href="https://luizgfranca.github.io/blog/" accesskey="h" title="Luiz G. França (Alt + H)">Luiz G. França</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -121,12 +103,28 @@
 
 <article class="first-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Why not all your successful fetch calls might have actually hit your server
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>When you see this code snippet, how many network calls do you think will be made when it runs in the browser? (assume any request made will be successful).
+try { const response1 = await fetch(&#39;http://localhost:3000/events&#39;); const data1 = await response1.json(); console.log(&#39;First request response:&#39;, data1); const response2 = await fetch(&#39;http://localhost:3000/events&#39;); const data2 = await response2.json(); console.log(&#39;Second request response:&#39;, data2); } catch (error) { console.error(&#39;Error making requests:&#39;, error); } Surprisingly, it could be two, one, or even none!
+That’s because the browser will decide whether or not to send the requests depending on previous responses it received from your backend.
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2025-06-19 16:59:50 -0300 -03'>June 19, 2025</span></footer>
+  <a class="entry-link" aria-label="post link to Why not all your successful fetch calls might have actually hit your server" href="https://luizgfranca.github.io/blog/posts/003/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">How to Calculate an Initial Instantaneous Measurement of Metrics on Cumulative Indicators in Real Time
     </h2>
   </header>
   <div class="entry-content">
     <p>Suppose we need to calculate data from a cumulative indicator to generate real-time graphs or metrics for and application’s users to look at. However, this indicator is managed by an external process, and we have no way of knowing exactly when it is updated. What strategies can we adopt to process this information?
-This is a problem I encountered in a project that initially seems simple. However, its solution involves some interesting ideas and it’s present in various software features we interact with daily....</p>
+This is a problem I encountered in a project that initially seems simple. However, its solution involves some interesting ideas and it’s present in various software features we interact with daily.
+...</p>
   </div>
   <footer class="entry-footer"><span title='2025-02-28 17:18:38 -0300 -03'>February 28, 2025</span></footer>
   <a class="entry-link" aria-label="post link to How to Calculate an Initial Instantaneous Measurement of Metrics on Cumulative Indicators in Real Time" href="https://luizgfranca.github.io/blog/posts/002/"></a>

@@ -103,17 +103,17 @@
 
 <article class="first-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor.
+    <h2 class="entry-hint-parent">Por que nem todo request fetch que respondeu realmente chamou seu servidor.
     </h2>
   </header>
   <div class="entry-content">
     <p>Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).
-try { const response1 = await fetch(&#39;http://localhost:3000/events&#39;); const data1 = await response1.json(); console.log(&#39;First request response:&#39;, data1); const response2 = await fetch(&#39;http://localhost:3000/events&#39;); const data2 = await response2.json(); console.log(&#39;Second request response:&#39;, data2); } catch (error) { console.error(&#39;Error making requests:&#39;, error); } Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!
-Isso porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.
+const response1 = await fetch(&#39;http://localhost:3000/event/latest&#39;); const data1 = await response1.json(); console.log(&#39;First request response:&#39;, data1); const response2 = await fetch(&#39;http://localhost:3000/event/latest&#39;); const data2 = await response2.json(); console.log(&#39;Second request response:&#39;, data2); Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!
+Esse foi um caso interessante que encontrei explorando o código do Ladybird, um novo browser open source em desenvolvimento, e que achei bem interessante. O comportamento acontece porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.
 ...</p>
   </div>
   <footer class="entry-footer"><span title='2025-06-19 16:59:50 -0300 -03'>junho 19, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor." href="https://luizgfranca.github.io/blog/pt/posts/003/"></a>
+  <a class="entry-link" aria-label="post link to Por que nem todo request fetch que respondeu realmente chamou seu servidor." href="https://luizgfranca.github.io/blog/pt/posts/003/"></a>
 </article>
 
 <article class="post-entry"> 

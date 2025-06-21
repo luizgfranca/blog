@@ -5,23 +5,18 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor. | Luiz G. França</title>
+<title>Por que nem todo request fetch que respondeu realmente chamou seu servidor. | Luiz G. França</title>
 <meta name="keywords" content="">
 <meta name="description" content="Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).
-try {
-	const response1 = await fetch(&#39;http://localhost:3000/events&#39;);
-	const data1 = await response1.json();
-	console.log(&#39;First request response:&#39;, data1);
-	
-	const response2 = await fetch(&#39;http://localhost:3000/events&#39;);
-	const data2 = await response2.json();
-	console.log(&#39;Second request response:&#39;, data2);
-	
-} catch (error) {
-	console.error(&#39;Error making requests:&#39;, error);
-}
+const response1 = await fetch(&#39;http://localhost:3000/event/latest&#39;);
+const data1 = await response1.json();
+console.log(&#39;First request response:&#39;, data1);
+
+const response2 = await fetch(&#39;http://localhost:3000/event/latest&#39;);
+const data2 = await response2.json();
+console.log(&#39;Second request response:&#39;, data2);
 Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!
-Isso porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.">
+Esse foi um caso interessante que encontrei explorando o código do Ladybird, um novo browser open source em desenvolvimento, e que achei bem interessante. O comportamento acontece porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.">
 <meta name="author" content="">
 <link rel="canonical" href="https://luizgfranca.github.io/blog/pt/posts/003/">
 <link crossorigin="anonymous" href="/blog/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
@@ -44,32 +39,27 @@ Isso porque o navegador vai decidir mandar ou não as requisições dependendo d
     </style>
 </noscript><meta property="og:url" content="https://luizgfranca.github.io/blog/pt/posts/003/">
   <meta property="og:site_name" content="Luiz G. França">
-  <meta property="og:title" content="Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor.">
+  <meta property="og:title" content="Por que nem todo request fetch que respondeu realmente chamou seu servidor.">
   <meta property="og:description" content="Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).
-try { const response1 = await fetch(&#39;http://localhost:3000/events&#39;); const data1 = await response1.json(); console.log(&#39;First request response:&#39;, data1); const response2 = await fetch(&#39;http://localhost:3000/events&#39;); const data2 = await response2.json(); console.log(&#39;Second request response:&#39;, data2); } catch (error) { console.error(&#39;Error making requests:&#39;, error); } Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!
-Isso porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.">
+const response1 = await fetch(&#39;http://localhost:3000/event/latest&#39;); const data1 = await response1.json(); console.log(&#39;First request response:&#39;, data1); const response2 = await fetch(&#39;http://localhost:3000/event/latest&#39;); const data2 = await response2.json(); console.log(&#39;Second request response:&#39;, data2); Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!
+Esse foi um caso interessante que encontrei explorando o código do Ladybird, um novo browser open source em desenvolvimento, e que achei bem interessante. O comportamento acontece porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.">
   <meta property="og:locale" content="pt">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2025-06-19T16:59:50-03:00">
     <meta property="article:modified_time" content="2025-06-19T16:59:50-03:00">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor.">
+<meta name="twitter:title" content="Por que nem todo request fetch que respondeu realmente chamou seu servidor.">
 <meta name="twitter:description" content="Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).
-try {
-	const response1 = await fetch(&#39;http://localhost:3000/events&#39;);
-	const data1 = await response1.json();
-	console.log(&#39;First request response:&#39;, data1);
-	
-	const response2 = await fetch(&#39;http://localhost:3000/events&#39;);
-	const data2 = await response2.json();
-	console.log(&#39;Second request response:&#39;, data2);
-	
-} catch (error) {
-	console.error(&#39;Error making requests:&#39;, error);
-}
+const response1 = await fetch(&#39;http://localhost:3000/event/latest&#39;);
+const data1 = await response1.json();
+console.log(&#39;First request response:&#39;, data1);
+
+const response2 = await fetch(&#39;http://localhost:3000/event/latest&#39;);
+const data2 = await response2.json();
+console.log(&#39;Second request response:&#39;, data2);
 Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!
-Isso porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.">
+Esse foi um caso interessante que encontrei explorando o código do Ladybird, um novo browser open source em desenvolvimento, e que achei bem interessante. O comportamento acontece porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.">
 
 
 <script type="application/ld+json">
@@ -86,7 +76,7 @@ Isso porque o navegador vai decidir mandar ou não as requisições dependendo d
     {
       "@type": "ListItem",
       "position":  2 ,
-      "name": "Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor.",
+      "name": "Por que nem todo request fetch que respondeu realmente chamou seu servidor.",
       "item": "https://luizgfranca.github.io/blog/pt/posts/003/"
     }
   ]
@@ -96,14 +86,14 @@ Isso porque o navegador vai decidir mandar ou não as requisições dependendo d
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor.",
-  "name": "Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor.",
-  "description": "Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).\ntry { const response1 = await fetch(\u0026#39;http://localhost:3000/events\u0026#39;); const data1 = await response1.json(); console.log(\u0026#39;First request response:\u0026#39;, data1); const response2 = await fetch(\u0026#39;http://localhost:3000/events\u0026#39;); const data2 = await response2.json(); console.log(\u0026#39;Second request response:\u0026#39;, data2); } catch (error) { console.error(\u0026#39;Error making requests:\u0026#39;, error); } Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!\nIsso porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.\n",
+  "headline": "Por que nem todo request fetch que respondeu realmente chamou seu servidor.",
+  "name": "Por que nem todo request fetch que respondeu realmente chamou seu servidor.",
+  "description": "Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).\nconst response1 = await fetch(\u0026#39;http://localhost:3000/event/latest\u0026#39;); const data1 = await response1.json(); console.log(\u0026#39;First request response:\u0026#39;, data1); const response2 = await fetch(\u0026#39;http://localhost:3000/event/latest\u0026#39;); const data2 = await response2.json(); console.log(\u0026#39;Second request response:\u0026#39;, data2); Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!\nEsse foi um caso interessante que encontrei explorando o código do Ladybird, um novo browser open source em desenvolvimento, e que achei bem interessante. O comportamento acontece porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.\n",
   "keywords": [
     
   ],
-  "articleBody": "Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).\ntry { const response1 = await fetch('http://localhost:3000/events'); const data1 = await response1.json(); console.log('First request response:', data1); const response2 = await fetch('http://localhost:3000/events'); const data2 = await response2.json(); console.log('Second request response:', data2); } catch (error) { console.error('Error making requests:', error); } Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!\nIsso porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.\nComo isso acontece? O backend (ou qualquer servidor de aplicação que possa estar executando ele, ou pelo qual suas respostas podem estar passando) pode adicionar o header Cache-Control com algum valor que instrui o navegador a usar o cache interno, por exemplo. Cache-Control: max-age=10 faz com que qualquer chamada subsequente nos próximos 10 segundos use o cache ao invés de chamar o backend novamente.\nIsso é um comportamento esperado da maior parte dos recursos, mas o que pode surpreender é o fato de que isso não funciona somente para páginas HTML, imagens ou arquivos JS, mas para chamadas feitas com fetch também.\nPor exemplo, se no backend um controller for implementado para responder a /event/latest gerando um UUID único para cada chamada:\napp.get('/event/latest', (req, res) =\u003e { const key = uuid.v4(); res.json({ key }) }) E executarmos o código acima no navegador, teremos o comportamento esperado.\n(veja que obtivemos 2 IDs diferentes).\nMas se fizermos um pequeno ajuste no backend.\napp.get('/event/latest', (req, res) =\u003e { const key = uuid.v4(); res.header('Cache-Control', 'max-age=60') res.json({ key }) }) Teremos o seguinte resultado: E se recarregarmos a página antes dos pŕoximos 60 segundos: olhando para a aba de network veremos 4 requests: mas olhando para os 3 últimos… (note o “from disk cache”).\nEsse não é um comportamento exclusivo dessa composição de header. O comportamento de quaisquer regras de headers de cache (que podem ser encontrados em https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control) vai funcionar para o fetch, mais conceitos sobre cache também podem ser encontrados em https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching.\nPor que isso acontece? Com a modernização das tecnologias web nos anos 2010, uma das iniciativas da W3C foi a formalização do comportamento de busca de recursos em rede, que era algo que nem sempre era tratado da mesma forma em navegadores. Um dos resultados dessa formalização foi a criação da ideia generalizada de fetch de resources, descrita na spec fetch (https://fetch.spec.whatwg.org/).\nUma das definições dela seria prover uma função para aplicações web que expõe esse conceito de baixo nível. E essa foi a origem da API fetch() que podemos chamar a partir do Javascript, e que foi introduzida em 2015 no ECMAScript 6 (ES6).\nPor conta dessa origem, ela representa o mesmo conceito de busca de recursos de um serviço web que é usado por outras funcionalidades do navegador que fazem a mesma coisa, como a busca dos documentos HTML, imagens, JS, etc… E por isso compartilha o mesmo caminho no código, o que inclui o cache HTTP, que faz com que esse comportamento aconteça.\nPara reproduzir os experimentos demonstrados aqui, o código usado está disponível nesse repositório do Github: https://github.com/luizgfranca/fetch-cache-example\n",
-  "wordCount" : "530",
+  "articleBody": "Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).\nconst response1 = await fetch('http://localhost:3000/event/latest'); const data1 = await response1.json(); console.log('First request response:', data1); const response2 = await fetch('http://localhost:3000/event/latest'); const data2 = await response2.json(); console.log('Second request response:', data2); Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!\nEsse foi um caso interessante que encontrei explorando o código do Ladybird, um novo browser open source em desenvolvimento, e que achei bem interessante. O comportamento acontece porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.\nComo isso acontece? O backend (ou qualquer servidor de aplicação que possa estar executando ele, ou pelo qual suas respostas podem estar passando) pode adicionar o header Cache-Control com algum valor que instrui o navegador a usar o cache interno, por exemplo. Cache-Control: max-age=10 faz com que qualquer chamada subsequente nos próximos 10 segundos use o cache ao invés de chamar o backend novamente.\nIsso é um comportamento esperado da maior parte dos recursos, mas o que pode surpreender é o fato de que isso não funciona somente para páginas HTML, imagens ou arquivos JS, mas para chamadas feitas com fetch também.\nPor exemplo, se no backend um controller for implementado para responder a /event/latest gerando um UUID único para cada chamada:\napp.get('/event/latest', (req, res) =\u003e { const key = uuid.v4(); res.json({ key }) }) E executarmos o código acima no navegador, teremos o comportamento esperado.\n(veja que obtivemos 2 IDs diferentes).\nMas se fizermos um pequeno ajuste no backend.\napp.get('/event/latest', (req, res) =\u003e { const key = uuid.v4(); res.header('Cache-Control', 'max-age=60') res.json({ key }) }) Teremos o seguinte resultado: E se recarregarmos a página antes dos pŕoximos 60 segundos: olhando para a aba de network veremos 4 requests: mas olhando para os 3 últimos… (note o “from disk cache”).\nEsse não é um comportamento exclusivo dessa composição de header. O comportamento de quaisquer regras de headers de cache (que podem ser encontrados em https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control) vai funcionar para o fetch, mais conceitos sobre cache também podem ser encontrados em https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching.\nPor que isso acontece? Com a modernização das tecnologias web nos anos 2010, uma das iniciativas da W3C foi a formalização do comportamento de busca de recursos em rede, que era algo que nem sempre era tratado da mesma forma em navegadores. Um dos resultados dessa formalização foi a criação da ideia generalizada de fetch de resources, descrita na spec fetch (https://fetch.spec.whatwg.org/).\nUma das definições dela seria prover uma função para aplicações web que expõe esse conceito de baixo nível. E essa foi a origem da API fetch() que podemos chamar a partir do Javascript, e que foi introduzida em 2015 no ECMAScript 6 (ES6).\nPor conta dessa origem, ela representa o mesmo conceito de busca de recursos de um serviço web que é usado por outras funcionalidades do navegador que fazem a mesma coisa, como a busca dos documentos HTML, imagens, JS, etc… E por isso compartilha o mesmo caminho no código, o que inclui o cache HTTP, que faz com que esse comportamento aconteça.\nPara reproduzir os experimentos demonstrados aqui, o código usado está disponível nesse repositório do Github: https://github.com/luizgfranca/fetch-cache-example\n",
+  "wordCount" : "545",
   "inLanguage": "pt",
   "datePublished": "2025-06-19T16:59:50-03:00",
   "dateModified": "2025-06-19T16:59:50-03:00",
@@ -174,7 +164,7 @@ Isso porque o navegador vai decidir mandar ou não as requisições dependendo d
   <header class="post-header">
     <div class="breadcrumbs"><a href="https://luizgfranca.github.io/blog/pt/">Início</a>&nbsp;»&nbsp;<a href="https://luizgfranca.github.io/blog/pt/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
-      Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor.
+      Por que nem todo request fetch que respondeu realmente chamou seu servidor.
     </h1>
     <div class="post-meta"><span title='2025-06-19 16:59:50 -0300 -03'>junho 19, 2025</span>&nbsp;|&nbsp;Traduções:
 <ul class="i18n_list">
@@ -186,20 +176,15 @@ Isso porque o navegador vai decidir mandar ou não as requisições dependendo d
 </div>
   </header> 
   <div class="post-content"><p>Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="k">try</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="kr">const</span> <span class="nx">response1</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://localhost:3000/events&#39;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">	<span class="kr">const</span> <span class="nx">data1</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">response1</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;First request response:&#39;</span><span class="p">,</span> <span class="nx">data1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl">	<span class="kr">const</span> <span class="nx">response2</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://localhost:3000/events&#39;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">	<span class="kr">const</span> <span class="nx">data2</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">response2</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Second request response:&#39;</span><span class="p">,</span> <span class="nx">data2</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">	
-</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;Error making requests:&#39;</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">response1</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://localhost:3000/event/latest&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">data1</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">response1</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;First request response:&#39;</span><span class="p">,</span> <span class="nx">data1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">response2</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://localhost:3000/event/latest&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">data2</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">response2</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Second request response:&#39;</span><span class="p">,</span> <span class="nx">data2</span><span class="p">);</span>
 </span></span></code></pre></div><p>Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!</p>
-<p>Isso porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.</p>
+<p>Esse foi um caso interessante que encontrei explorando o código do Ladybird, um novo browser open source em desenvolvimento, e que achei bem interessante. O comportamento acontece porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.</p>
 <h2 id="como-isso-acontece">Como isso acontece?<a hidden class="anchor" aria-hidden="true" href="#como-isso-acontece">#</a></h2>
 <p>O backend (ou qualquer servidor de aplicação que possa estar executando ele, ou pelo qual suas respostas podem estar passando) pode adicionar o header <code>Cache-Control</code> com algum valor que instrui o navegador a usar o cache interno, por exemplo. <code>Cache-Control: max-age=10</code> faz com que qualquer chamada subsequente nos próximos 10 segundos use o cache ao invés de chamar o backend novamente.</p>
 <p>Isso é um comportamento esperado da maior parte dos recursos, mas o que pode surpreender é o fato de que isso não funciona somente para páginas HTML, imagens ou arquivos JS, mas para chamadas feitas com <code>fetch</code> também.</p>

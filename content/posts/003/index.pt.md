@@ -1,5 +1,5 @@
 +++
-title = 'Por que mesmo um request fetch que respondeu talvez não realmente tenha ido no seu servidor.'
+title = 'Por que nem todo request fetch que respondeu realmente chamou seu servidor.'
 date = 2025-06-19T16:59:50-03:00
 draft = false
 +++
@@ -7,23 +7,18 @@ draft = false
 Quando você vê esse trecho de código, quantas chamadas de rede você acredita que serão feitas quando ele for executado no navegador? (suponha que qualquer requisição feita será bem sucedida).
 
 ```js
-try {
-	const response1 = await fetch('http://localhost:3000/events');
-	const data1 = await response1.json();
-	console.log('First request response:', data1);
-	
-	const response2 = await fetch('http://localhost:3000/events');
-	const data2 = await response2.json();
-	console.log('Second request response:', data2);
-	
-} catch (error) {
-	console.error('Error making requests:', error);
-}
+const response1 = await fetch('http://localhost:3000/event/latest');
+const data1 = await response1.json();
+console.log('First request response:', data1);
+
+const response2 = await fetch('http://localhost:3000/event/latest');
+const data2 = await response2.json();
+console.log('Second request response:', data2);
 ```
 
 Surpreendentemente, podem ser duas, uma, ou até mesmo nenhuma!
 
-Isso porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.
+Esse foi um caso interessante que encontrei explorando o código do Ladybird, um novo browser open source em desenvolvimento, e que achei bem interessante. O comportamento acontece porque o navegador vai decidir mandar ou não as requisições dependendo das respostas anteriores que ele recebeu do seu backend.
 
 ## Como isso acontece?
 

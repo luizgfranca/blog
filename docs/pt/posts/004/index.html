@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>O await do javascript não &#34;espera&#34; que sua Promise se complete | Luiz G. França</title>
+<meta name="keywords" content="">
+<meta name="description" content="A arquitetura do Javascript não foi projetada desde o começo com execução assíncrona em mente, e mesmo com a adição de recursos que permitem assincronia (como Promises ou async/await) ainda é claro isso pela falta de clareza sobre o comportamento em alguns momentos, o que faz com que vários desenvolvedorres da linguagem tenham expectativas incorretas sobre o que vai acontecer com seu código quando ele for executado. O problema ainda é amplificado pela quantidade de conteúdo que temos hoje em dia que, na tentativa bem intencionada de simplificar conceitos da linguagem por motivos didáticos, acabam propagando ideias incorretas.">
+<meta name="author" content="">
+<link rel="canonical" href="https://luizgfranca.github.io/blog/pt/posts/004/">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://luizgfranca.github.io/blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://luizgfranca.github.io/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://luizgfranca.github.io/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://luizgfranca.github.io/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://luizgfranca.github.io/blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="pt" href="https://luizgfranca.github.io/blog/pt/posts/004/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><meta property="og:url" content="https://luizgfranca.github.io/blog/pt/posts/004/">
+  <meta property="og:site_name" content="Luiz G. França">
+  <meta property="og:title" content="O await do javascript não &#34;espera&#34; que sua Promise se complete">
+  <meta property="og:description" content="A arquitetura do Javascript não foi projetada desde o começo com execução assíncrona em mente, e mesmo com a adição de recursos que permitem assincronia (como Promises ou async/await) ainda é claro isso pela falta de clareza sobre o comportamento em alguns momentos, o que faz com que vários desenvolvedorres da linguagem tenham expectativas incorretas sobre o que vai acontecer com seu código quando ele for executado. O problema ainda é amplificado pela quantidade de conteúdo que temos hoje em dia que, na tentativa bem intencionada de simplificar conceitos da linguagem por motivos didáticos, acabam propagando ideias incorretas.">
+  <meta property="og:locale" content="pt">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-10T11:31:00-03:00">
+    <meta property="article:modified_time" content="2026-02-10T11:31:00-03:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="O await do javascript não &#34;espera&#34; que sua Promise se complete">
+<meta name="twitter:description" content="A arquitetura do Javascript não foi projetada desde o começo com execução assíncrona em mente, e mesmo com a adição de recursos que permitem assincronia (como Promises ou async/await) ainda é claro isso pela falta de clareza sobre o comportamento em alguns momentos, o que faz com que vários desenvolvedorres da linguagem tenham expectativas incorretas sobre o que vai acontecer com seu código quando ele for executado. O problema ainda é amplificado pela quantidade de conteúdo que temos hoje em dia que, na tentativa bem intencionada de simplificar conceitos da linguagem por motivos didáticos, acabam propagando ideias incorretas.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://luizgfranca.github.io/blog/pt/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "O await do javascript não \"espera\" que sua Promise se complete",
+      "item": "https://luizgfranca.github.io/blog/pt/posts/004/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "O await do javascript não \"espera\" que sua Promise se complete",
+  "name": "O await do javascript não \u0022espera\u0022 que sua Promise se complete",
+  "description": "A arquitetura do Javascript não foi projetada desde o começo com execução assíncrona em mente, e mesmo com a adição de recursos que permitem assincronia (como Promises ou async/await) ainda é claro isso pela falta de clareza sobre o comportamento em alguns momentos, o que faz com que vários desenvolvedorres da linguagem tenham expectativas incorretas sobre o que vai acontecer com seu código quando ele for executado. O problema ainda é amplificado pela quantidade de conteúdo que temos hoje em dia que, na tentativa bem intencionada de simplificar conceitos da linguagem por motivos didáticos, acabam propagando ideias incorretas.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "A arquitetura do Javascript não foi projetada desde o começo com execução assíncrona em mente, e mesmo com a adição de recursos que permitem assincronia (como Promises ou async/await) ainda é claro isso pela falta de clareza sobre o comportamento em alguns momentos, o que faz com que vários desenvolvedorres da linguagem tenham expectativas incorretas sobre o que vai acontecer com seu código quando ele for executado. O problema ainda é amplificado pela quantidade de conteúdo que temos hoje em dia que, na tentativa bem intencionada de simplificar conceitos da linguagem por motivos didáticos, acabam propagando ideias incorretas.\nEssa é uma história de um desses comportamentos onde a natureza do Javascript, e o entendimento dos desenvolvedores que usam a linguagem sobre como ela funciona permitem que problemas menos óbvios passem despercebidos.\nO contexto Um dia me relataram um bug no trabalho em um dos sistemas que eu tinha assumido. Ele é um batch job que converte definições de promoção de um sistema de definição de produtos especializado de telecomunicações para o catalogo do Salesforce Commerce Cloud.\nEssas promoções podem envolver tanto atributos que são comuns de promoções em e-commerce genéricos, como atributos dos produtos, combinações de produtos específicos, como cupons de desconto, valor ou percentual de desconto, quanto atributos do produto atualmente contratado, como SVAs associados, combinações de tipos de produtos, localidade e atributos de clientes.\nEsse processo funciona basicamente da seguinte forma:\nObtenção da promoção na API do sistema de produtos Separação dos atributos relacionados aos produtos, dados do usuário logado e dados controlados por sessão buscar cupons de desconto e selecionar algum se aplicável criar Customer Group com requisitos de dados de cliente e sessão, e criar uma Campaign para ele com a regra de cupom se aplicável criar Promotion com requisitos de composição de produtos associar Promotion com Campaign criados salva-los em resultado que será usado para gerar o XML de importação Essa busca para montagem do XML que é importado no Salesforce Commerce Cloud é feita a partir de uma classe que implementa o design pattern de visitor, e tem uma estrutura semelhante a essa:\nclass ProductSystemPromotionVisitor() { private promotions: Promotion[]; private campaigns: Campaign[]; private assignments: CampaignAssignment[]; /* * ... */ async visitSystemPromotion(systemPromotion: ProductSystemPromotion) { // ... } /* * ... */ async onFinish() { return this.generatePromotionsXML( this.promotions, this.campaigns, this.assignments ) } } Onde o processo principal de batch navega as promoções definidas no sistema de produtos, e para cada uma encontrada chama o visitSystemPromotion() passando sua definição. Esse método então cria os objetos de promoção e campanha, e acumula em variáveis da classe. Ao final do processo de batch a função onFinish() é chamada, gerando o arquivo XML com os dados acumulados.\nRecentemente o processo tinha sido evoluído com uma nova feature para incluir essa busca de cupom de desconto.\nO problema Dado o contexto podemos agora olhar os detalhes do problema:\nFoi relatado um bug onde certas promoções não estavam sendo eligibilizadas corretamente, ao investigar o problema vi que uma das promoções estava com uma campanha que não era compatível com ela, então resolvi investigar a visitSystemPromotion, onde essa associação é feita.\nSegue uma versão simplificada do método:\nasync visitSystemPromotion(systemPromotion: ProductSystemPromotion) { if(!this.shouldGenerate(systemPromotion)) return this.promotionAttrs = this.processPomotionAttrs(systemPromotion); const couponDefinition = await this.couponRepository.findByAcronym(systemPromotion.acronym); this.campaignAttrs = this.processCampaignAttrs(systemPromotion); const coupon = this.generateCoupon(couponDefinition); this.campaignAttrs.coupon = coupon; const campaign = this.createCampaign(this.campaignAttrs); this.campaigns.push(campaign); const promotion = this.createPromotion(this.promotionAttrs); this.promotions.push(promotion); const assignment = this.createCampaignAssignment(campaign, promotion) this.assignments.push(assignment); } Sabendo que a feature de configuração de cupons tinha sido feita recentemente não foi tão dificil saber para onde olhar, e consequentemente porque o problema aconteceu.\nO problema desse código é causado porque o await somente suspende codigo do método que está abaixo dele pelo menos até que a Promise seja resolvida, enquanto isso outras tarefas podem ser executadas, e era o que acontecia, os atributos da campanha de this.promotionAttrs foram substituídos pelo de outra uma vez que outra promoção foi visitada enquanto ainda se aguardava a proxima orquestração do restante do método.\nAlém da má prática clara que existia ali de tentar guardar estados locais dentro de um objeto global, o que inflenciou o bug esse problema tem a ver com uma concepção errada que é frequentemente propagada quando falamos de javscript, que é a alegação de que o await “espera” o resultado da chamada feita por ele, sendo que isso é muito diferente da realidade.\nO que realmente é o async/await async e await são, na realidade, apenas uma forma mais ergonômica de executar uma funcionalidade já existente na linguagem. Nesse caso essa sintaxe é uma alternativa à API de promises.\nPor exemplo, considerando que a() e b() são duas funções que retornam promises, o código abaixo\nasync function f() { await a(); await b(); } Na prática executa a mesma funcionalidade que essa expansão usando a API de promises (ignorando o caso de exceções)\nfunction f() { return new Promise((resolve, _) =\u003e { a().then(() =\u003e { b().then(() =\u003e resolve()) }) }) } Isso quer dizer que estamos definindo só uma simples relação de happens-before de a() para b(), qualquer código que não está dentro dessa relação tecnicamente é concorrente, e pode executar entre as duas chamadas.\nIsso acontece por conta do mecanismo que o Event Loop usa para otimizar a execução de códigos que executam de forma concorrente. Para evitar ficar ocioso enquanto existem tarefas para executar ele organiza as promises que são candidatas a serem executadas no proximo tick dentro de uma fila chamada de “microtask queue”.\nNo momento em que uma promise pode ser executada, por exemplo no caso de uma chamada de rede quando a resposta foi recebida do servidor, o código adequado, seja o callback definido no then ou seja o definido no catch é adicionado ao final dessa fila.\nEsta arquitetura permite que a não ser que não exista nenhum código que pode ser executado, a V8 (no caso do Node.js) pode sempre continuar ocupada com algo útil, e foi uma das vantagens que ajudou o Node.js a se tornar popular, pois ele pode lidar com várias requisições concorrentes usando a mesma thread do sistema operacional para executar sua lógica, abordagem com várias vantage, que até foi adotada por outros ecossistemas, como Java e sua recente adição de Virtual Threads, com uma diferença de que o Java já possuia abstrações melhores para lidar com concorrência.\nExiste uma palestra que apesar de antiga, eu vi um tempo atrás e me ajudou a criar um modelo mental melhor de como comportamentos assíncronos funcionam no Node.js, e eu recomendaria muito assistir: https://www.youtube.com/watch?v=8aGhZQkoFbQ\u0026t=31s\n",
+  "wordCount" : "1082",
+  "inLanguage": "pt",
+  "datePublished": "2026-02-10T11:31:00-03:00",
+  "dateModified": "2026-02-10T11:31:00-03:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://luizgfranca.github.io/blog/pt/posts/004/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Luiz G. França",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://luizgfranca.github.io/blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://luizgfranca.github.io/blog/pt/" accesskey="h" title="Luiz G. França (Alt + H)">Luiz G. França</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="https://luizgfranca.github.io/blog/" title="🇺🇸"
+                            aria-label=":us:">🇺🇸</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://luizgfranca.github.io/blog/pt/">Início</a>&nbsp;»&nbsp;<a href="https://luizgfranca.github.io/blog/pt/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      O await do javascript não &#34;espera&#34; que sua Promise se complete
+    </h1>
+    <div class="post-meta"><span title='2026-02-10 11:31:00 -0300 -03'>fevereiro 10, 2026</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>A arquitetura do Javascript não foi projetada desde o começo com execução assíncrona em mente, e mesmo com a adição de recursos que permitem assincronia (como <code>Promises</code> ou <code>async/await</code>) ainda é claro isso pela falta de clareza sobre o comportamento em alguns momentos, o que faz com que vários desenvolvedorres da linguagem tenham expectativas incorretas sobre o que vai acontecer com seu código quando ele for executado. O problema ainda é amplificado pela quantidade de conteúdo que temos hoje em dia que, na tentativa bem intencionada de simplificar conceitos da linguagem por motivos didáticos, acabam propagando ideias incorretas.</p>
+<p>Essa é uma história de um desses comportamentos onde a natureza do Javascript, e o entendimento dos desenvolvedores que usam a linguagem sobre como ela funciona permitem que problemas menos óbvios passem despercebidos.</p>
+<h2 id="o-contexto">O contexto<a hidden class="anchor" aria-hidden="true" href="#o-contexto">#</a></h2>
+<p>Um dia me relataram um bug no trabalho em um dos sistemas que eu tinha assumido. Ele é um batch job que converte definições de promoção de um sistema de definição de produtos especializado de telecomunicações para o catalogo do Salesforce Commerce Cloud.</p>
+<p>Essas promoções podem envolver tanto atributos que são comuns de promoções em e-commerce genéricos, como atributos dos produtos, combinações de produtos específicos, como cupons de desconto, valor ou percentual de desconto, quanto atributos do produto atualmente contratado, como SVAs associados, combinações de tipos de produtos, localidade e atributos de clientes.</p>
+<p>Esse processo funciona basicamente da seguinte forma:</p>
+<ul>
+<li>Obtenção da promoção na API do sistema de produtos</li>
+<li>Separação dos atributos relacionados aos produtos, dados do usuário logado e dados controlados por sessão</li>
+<li>buscar cupons de desconto e selecionar algum se aplicável</li>
+<li>criar <code>Customer Group</code> com requisitos de dados de cliente e sessão, e criar uma <code>Campaign</code> para ele com a regra de cupom se aplicável</li>
+<li>criar <code>Promotion</code> com requisitos de composição de produtos</li>
+<li>associar <code>Promotion</code> com <code>Campaign</code> criados</li>
+<li>salva-los em resultado que será usado para gerar o XML de importação</li>
+</ul>
+<p>Essa busca para montagem do XML que é importado no Salesforce Commerce Cloud é feita a partir de uma classe que implementa o design pattern de visitor, e tem uma estrutura semelhante a essa:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">class</span> <span class="nx">ProductSystemPromotionVisitor</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">private</span> <span class="nx">promotions</span><span class="o">:</span> <span class="nx">Promotion</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">private</span> <span class="nx">campaigns</span><span class="o">:</span> <span class="nx">Campaign</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">private</span> <span class="nx">assignments</span><span class="o">:</span> <span class="nx">CampaignAssignment</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * ...
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 */</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">async</span> <span class="nx">visitSystemPromotion</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="o">:</span> <span class="nx">ProductSystemPromotion</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * ...
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 */</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">async</span> <span class="nx">onFinish</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">generatePromotionsXML</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">			<span class="k">this</span><span class="p">.</span><span class="nx">promotions</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">			<span class="k">this</span><span class="p">.</span><span class="nx">campaigns</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">			<span class="k">this</span><span class="p">.</span><span class="nx">assignments</span>
+</span></span><span class="line"><span class="cl">		<span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Onde o processo principal de batch navega as promoções definidas no sistema de produtos, e para cada uma encontrada chama o <code>visitSystemPromotion()</code> passando sua definição. Esse método então cria os objetos de promoção e campanha, e acumula em variáveis da classe. Ao final do processo de batch a função <code>onFinish()</code> é chamada, gerando o arquivo XML com os dados acumulados.</p>
+<p>Recentemente o processo tinha sido evoluído com uma nova feature para incluir essa busca de cupom de desconto.</p>
+<h2 id="o-problema">O problema<a hidden class="anchor" aria-hidden="true" href="#o-problema">#</a></h2>
+<p>Dado o contexto podemos agora olhar os detalhes do problema:</p>
+<p>Foi relatado um bug onde certas promoções não estavam sendo eligibilizadas corretamente, ao investigar o problema vi que uma das promoções estava com uma campanha que não era compatível com ela, então resolvi investigar a <code>visitSystemPromotion</code>, onde essa associação é feita.</p>
+<p>Segue uma versão simplificada do método:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ts" data-lang="ts"><span class="line"><span class="cl">	<span class="kr">async</span> <span class="nx">visitSystemPromotion</span><span class="p">(</span><span class="nx">systemPromotion</span>: <span class="kt">ProductSystemPromotion</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">shouldGenerate</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="p">))</span> <span class="k">return</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">promotionAttrs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">processPomotionAttrs</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">couponDefinition</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">couponRepository</span><span class="p">.</span><span class="nx">findByAcronym</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="p">.</span><span class="nx">acronym</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">campaignAttrs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">processCampaignAttrs</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">coupon</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateCoupon</span><span class="p">(</span><span class="nx">couponDefinition</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">campaignAttrs</span><span class="p">.</span><span class="nx">coupon</span> <span class="o">=</span> <span class="nx">coupon</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">campaign</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createCampaign</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">campaignAttrs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">campaigns</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">campaign</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">promotion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createPromotion</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">promotionAttrs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">promotions</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">promotion</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">assignment</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createCampaignAssignment</span><span class="p">(</span><span class="nx">campaign</span><span class="p">,</span> <span class="nx">promotion</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">assignments</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">assignment</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span></code></pre></div><p>Sabendo que a feature de configuração de cupons tinha sido feita recentemente não foi tão dificil saber para onde olhar, e consequentemente porque o problema aconteceu.</p>
+<p>O problema desse código é causado porque o <code>await</code> somente suspende codigo do método que está <strong>abaixo</strong> dele <strong>pelo menos</strong> até que a <code>Promise</code> seja resolvida, enquanto isso outras tarefas podem ser executadas, e era o que acontecia, os atributos da campanha de <code>this.promotionAttrs</code> foram substituídos pelo de outra uma vez que outra promoção foi visitada enquanto ainda se aguardava a proxima orquestração do restante do método.</p>
+<p>Além da má prática clara que existia ali de tentar guardar estados locais dentro de um objeto global, o que inflenciou o bug esse problema tem a ver com uma concepção errada que é frequentemente propagada quando falamos de javscript, que é a alegação de que o <code>await</code> &ldquo;espera&rdquo; o resultado da chamada feita por ele, sendo que isso é muito diferente da realidade.</p>
+<h2 id="o-que-realmente-é-o-asyncawait">O que realmente é o async/await<a hidden class="anchor" aria-hidden="true" href="#o-que-realmente-é-o-asyncawait">#</a></h2>
+<p><code>async</code> e <code>await</code> são, na realidade, apenas uma forma mais ergonômica de executar uma funcionalidade já existente na linguagem. Nesse caso essa sintaxe é uma alternativa à API de promises.</p>
+<p>Por exemplo, considerando que <code>a()</code> e <code>b()</code> são duas funções que retornam promises, o código abaixo</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">await</span> <span class="nx">a</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">await</span> <span class="nx">b</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Na prática executa a mesma funcionalidade que essa expansão usando a API de promises (ignorando o caso de exceções)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">_</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">a</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">b</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="nx">resolve</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">		<span class="p">})</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Isso quer dizer que estamos definindo só uma simples relação de happens-before de <code>a()</code> para <code>b()</code>, qualquer código que não está dentro dessa relação tecnicamente é concorrente, e pode executar entre as duas chamadas.</p>
+<p>Isso acontece por conta do mecanismo que o Event Loop usa para otimizar a execução de códigos que executam de forma concorrente. Para evitar ficar ocioso enquanto existem tarefas para executar ele organiza as promises que são candidatas a serem executadas no proximo tick dentro de uma fila chamada de &ldquo;microtask queue&rdquo;.</p>
+<p>No momento em que uma promise pode ser executada, por exemplo no caso de uma chamada de rede quando a resposta foi recebida do servidor, o código adequado, seja o callback definido no <code>then</code> ou seja o definido no <code>catch</code> é adicionado ao final dessa fila.</p>
+<p>Esta arquitetura permite que a não ser que não exista nenhum código que pode ser executado, a V8 (no caso do Node.js) pode sempre continuar ocupada com algo útil, e foi uma das vantagens que ajudou o Node.js a se tornar popular, pois ele pode lidar com várias requisições concorrentes usando a mesma thread do sistema operacional para executar sua lógica, abordagem com várias vantage, que até foi adotada por outros ecossistemas, como Java e sua recente adição de Virtual Threads, com uma diferença de que o Java já possuia abstrações melhores para lidar com concorrência.</p>
+<p>Existe uma palestra que apesar de antiga, eu vi um tempo atrás e me ajudou a criar um modelo mental melhor de como comportamentos assíncronos funcionam no Node.js, e eu recomendaria muito assistir: <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ&amp;t=31s">https://www.youtube.com/watch?v=8aGhZQkoFbQ&t=31s</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://luizgfranca.github.io/blog/pt/posts/003/">
+    <span class="title">Próxima Página »</span>
+    <br>
+    <span>Por que nem todo request fetch que respondeu realmente chamou seu servidor.</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://luizgfranca.github.io/blog/pt/">Luiz G. França</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

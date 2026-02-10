@@ -4,10 +4,17 @@
     <title>Luiz G. França</title>
     <link>https://luizgfranca.github.io/blog/pt/</link>
     <description>Recent content on Luiz G. França</description>
-    <generator>Hugo -- 0.147.8</generator>
+    <generator>Hugo -- 0.155.3</generator>
     <language>pt</language>
-    <lastBuildDate>Thu, 19 Jun 2025 16:59:50 -0300</lastBuildDate>
+    <lastBuildDate>Tue, 10 Feb 2026 11:31:00 -0300</lastBuildDate>
     <atom:link href="https://luizgfranca.github.io/blog/pt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>O await do javascript não &#34;espera&#34; que sua Promise se complete</title>
+      <link>https://luizgfranca.github.io/blog/pt/posts/004/</link>
+      <pubDate>Tue, 10 Feb 2026 11:31:00 -0300</pubDate>
+      <guid>https://luizgfranca.github.io/blog/pt/posts/004/</guid>
+      <description>&lt;p&gt;A arquitetura do Javascript não foi projetada desde o começo com execução assíncrona em mente, e mesmo com a adição de recursos que permitem assincronia (como &lt;code&gt;Promises&lt;/code&gt; ou &lt;code&gt;async/await&lt;/code&gt;) ainda é claro isso pela falta de clareza sobre o comportamento em alguns momentos, o que faz com que vários desenvolvedorres da linguagem tenham expectativas incorretas sobre o que vai acontecer com seu código quando ele for executado. O problema ainda é amplificado pela quantidade de conteúdo que temos hoje em dia que, na tentativa bem intencionada de simplificar conceitos da linguagem por motivos didáticos, acabam propagando ideias incorretas.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Por que nem todo request fetch que respondeu realmente chamou seu servidor.</title>
       <link>https://luizgfranca.github.io/blog/pt/posts/003/</link>

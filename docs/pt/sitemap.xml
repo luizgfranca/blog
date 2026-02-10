@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://luizgfranca.github.io/blog/pt/</loc>
-    <lastmod>2025-06-19T16:59:50-03:00</lastmod>
+    <lastmod>2026-02-10T11:31:00-03:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -13,6 +13,22 @@
                 rel="alternate"
                 hreflang="pt"
                 href="https://luizgfranca.github.io/blog/pt/"
+                />
+  </url><url>
+    <loc>https://luizgfranca.github.io/blog/pt/posts/004/</loc>
+    <lastmod>2026-02-10T11:31:00-03:00</lastmod>
+  </url><url>
+    <loc>https://luizgfranca.github.io/blog/pt/posts/</loc>
+    <lastmod>2026-02-10T11:31:00-03:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://luizgfranca.github.io/blog/posts/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="https://luizgfranca.github.io/blog/pt/posts/"
                 />
   </url><url>
     <loc>https://luizgfranca.github.io/blog/pt/posts/003/</loc>
@@ -26,19 +42,6 @@
                 rel="alternate"
                 hreflang="pt"
                 href="https://luizgfranca.github.io/blog/pt/posts/003/"
-                />
-  </url><url>
-    <loc>https://luizgfranca.github.io/blog/pt/posts/</loc>
-    <lastmod>2025-06-19T16:59:50-03:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://luizgfranca.github.io/blog/posts/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="pt"
-                href="https://luizgfranca.github.io/blog/pt/posts/"
                 />
   </url><url>
     <loc>https://luizgfranca.github.io/blog/pt/posts/002/</loc>

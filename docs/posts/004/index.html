@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>The await from Javascript does not &#34;wait&#34; for a promise to resolve | Luiz G. França</title>
+<meta name="keywords" content="">
+<meta name="description" content="JavaScript&rsquo;s architecture wasn&rsquo;t designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable asynchronicity (like Promises or async/await), this is still evident from the lack of clarity of behavior in certain situations. This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.">
+<meta name="author" content="">
+<link rel="canonical" href="https://luizgfranca.github.io/blog/posts/004/">
+<link crossorigin="anonymous" href="/blog/assets/css/stylesheet.2211ca3164be7830024f6aad2b3a2e520843a64f8f048445c3401c1249aa051d.css" integrity="sha256-IhHKMWS&#43;eDACT2qtKzouUghDpk&#43;PBIRFw0AcEkmqBR0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://luizgfranca.github.io/blog/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://luizgfranca.github.io/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://luizgfranca.github.io/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://luizgfranca.github.io/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="https://luizgfranca.github.io/blog/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://luizgfranca.github.io/blog/posts/004/">
+<link rel="alternate" hreflang="pt" href="https://luizgfranca.github.io/blog/pt/posts/004/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><meta property="og:url" content="https://luizgfranca.github.io/blog/posts/004/">
+  <meta property="og:site_name" content="Luiz G. França">
+  <meta property="og:title" content="The await from Javascript does not &#34;wait&#34; for a promise to resolve">
+  <meta property="og:description" content="JavaScript’s architecture wasn’t designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable asynchronicity (like Promises or async/await), this is still evident from the lack of clarity of behavior in certain situations. This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-10T11:31:00-03:00">
+    <meta property="article:modified_time" content="2026-02-10T11:31:00-03:00">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The await from Javascript does not &#34;wait&#34; for a promise to resolve">
+<meta name="twitter:description" content="JavaScript&rsquo;s architecture wasn&rsquo;t designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable asynchronicity (like Promises or async/await), this is still evident from the lack of clarity of behavior in certain situations. This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://luizgfranca.github.io/blog/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "The await from Javascript does not \"wait\" for a promise to resolve",
+      "item": "https://luizgfranca.github.io/blog/posts/004/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The await from Javascript does not \"wait\" for a promise to resolve",
+  "name": "The await from Javascript does not \u0022wait\u0022 for a promise to resolve",
+  "description": "JavaScript\u0026rsquo;s architecture wasn\u0026rsquo;t designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable asynchronicity (like Promises or async/await), this is still evident from the lack of clarity of behavior in certain situations. This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "JavaScript’s architecture wasn’t designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable asynchronicity (like Promises or async/await), this is still evident from the lack of clarity of behavior in certain situations. This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.\nThis is a story about one of those behaviors where JavaScript’s nature, combined with developers’ understanding of how the language works, allows for less obvious problems to slip through unnoticed.\nThe Context One day I got a bug report at work on one of the systems I’d taken over. It’s a batch job that converts promotion definitions from a specialized telecom product definition system to the Salesforce Commerce Cloud catalog.\nThese promotions can involve both attributes common to generic e-commerce promotions (like product attributes, specific product combinations, discount coupons, discount amount or percentage), as well as attributes from the currently contracted product, like associated “SVAs” (additional value-added services), product type combinations, location, and customer attributes.\nThe process basically works like this:\nFetch the promotion from the product system API Separate attributes related to products, logged-in user data, and session-controlled data Search for discount coupons and select one if applicable Create a Customer Group with customer and session data requirements, and create a Campaign for it with the coupon rule if applicable Create a Promotion with product composition requirements Associate the Promotion with the created Campaign Save them in a result that will be used to generate XML for importing This search to build the XML that gets imported into Salesforce Commerce Cloud is done through a class that implements the visitor design pattern, with a structure similar to this:\nclass ProductSystemPromotionVisitor() { private promotions: Promotion[]; private campaigns: Campaign[]; private assignments: CampaignAssignment[]; /* * ... */ async visitSystemPromotion(systemPromotion: ProductSystemPromotion) { // ... } /* * ... */ async onFinish() { return this.generatePromotionsXML( this.promotions, this.campaigns, this.assignments ) } } The main batch process iterates through the promotions defined in the product system, and for each one found, it calls visitSystemPromotion() passing its definition. This method then creates the promotion and campaign objects and accumulates them in class variables. At the end of the batch process, the onFinish() function is called, generating the XML file with the accumulated data.\nRecently, the process had been enhanced with a new feature to include this discount coupon search.\nThe Problem Given the context, we can now look at the details of the issue.\nA bug was reported in which certain promotions weren’t being “eligibilized” correctly.\nElibibilization is a process where the rules of promotions, properties of services selected, and characteristics of the customer are evaluated to see if the promotion should be applied or not.\nWhen investigating this, I found that one of the promotions had a campaign that wasn’t compatible with it, so I decided to investigate visitSystemPromotion, where this association is made.\nHere’s a simplified version of the method:\nasync visitSystemPromotion(systemPromotion: ProductSystemPromotion) { if(!this.shouldGenerate(systemPromotion)) return this.promotionAttrs = this.processPomotionAttrs(systemPromotion); const couponDefinition = await this.couponRepository.findByAcronym(systemPromotion.acronym); this.campaignAttrs = this.processCampaignAttrs(systemPromotion); const coupon = this.generateCoupon(couponDefinition); this.campaignAttrs.coupon = coupon; const campaign = this.createCampaign(this.campaignAttrs); this.campaigns.push(campaign); const promotion = this.createPromotion(this.promotionAttrs); this.promotions.push(promotion); const assignment = this.createCampaignAssignment(campaign, promotion) this.assignments.push(assignment); } Knowing that the coupon configuration feature had been done recently, it wasn’t hard to figure out where to look, and consequently why the problem happened. The await added to load the coupons inside the async method that had no await before.\nThe issue with this code is caused because await only suspends code in the method under it at least until the Promise resolves. Meanwhile, other tasks can execute freely.\nAnd that’s what was happening. The campaign attributes in this.promotionAttrs were being replaced by another promotion’s attributes since another promotion was visited while still waiting for the completion of the repository query and the next orchestration of the rest of the method.\nBeyond the clear bad practice of trying to store local state inside a global object, which contributed for the bug to happen, this problem relates to a common misconception that’s frequently spread when we talk about JavaScript: the claim that await “waits” for the result of the call it makes, which is very different from reality.\nWhat async/await Actually Is async and await are really just a more ergonomic way to execute functionality that already exists in the language. In this case, this syntax is an alternative to the Promise API.\nFor example, considering that a() and b() are two functions that return promises\nThe code below:\nasync function f() { await a(); await b(); } In practice executes the same functionality as this expansion using the Promise API (ignoring exception cases)\nfunction f() { return new Promise((resolve, _) =\u003e { a().then(() =\u003e { b().then(() =\u003e resolve()) }) }) } This means we’re only defining a simple happens-before relationship between a() and b(). Any code that’s not inside this relationship is technically concurrent and can execute between the two calls.\nThis happens because of the mechanism the Event Loop uses to optimize the execution of code that runs concurrently.\nTo avoid sitting idle while there are tasks to execute, it organizes promises that are candidates to be executed in the next tick into a queue called the “microtask queue.”\nWhen a promise can be executed, for instance in the case of a network call when the response is received from the server, the appropriate code, whether the callback defined in then or catch, is added to the end of this queue.\nThis architecture allows the V8 (in Node.js’s case) to always stay busy with something useful unless there’s no code that can be executed. This was one of the advantages that helped Node.js become popular, since it can handle multiple concurrent requests using the same OS thread to execute its logic.\nThis is an approach with several advantages that was even adopted by other ecosystems, like Java and its recent addition of Virtual Threads, with the difference that Java already had better abstractions for handling concurrency, so this kind of problem is less likely to happen with it.\nThere’s a talk that, despite being old, I watched a while back and helped me build a better mental model of how asynchronous behaviors work in Node.js, and I’d highly recommend watching it: https://www.youtube.com/watch?v=8aGhZQkoFbQ\u0026t=31s\n",
+  "wordCount" : "1075",
+  "inLanguage": "en",
+  "datePublished": "2026-02-10T11:31:00-03:00",
+  "dateModified": "2026-02-10T11:31:00-03:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://luizgfranca.github.io/blog/posts/004/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Luiz G. França",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://luizgfranca.github.io/blog/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://luizgfranca.github.io/blog/" accesskey="h" title="Luiz G. França (Alt + H)">Luiz G. França</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                    <li>
+                        <a href="https://luizgfranca.github.io/blog/pt/" title="🇧🇷"
+                            aria-label="🇧🇷">🇧🇷</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://luizgfranca.github.io/blog/">Home</a>&nbsp;»&nbsp;<a href="https://luizgfranca.github.io/blog/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      The await from Javascript does not &#34;wait&#34; for a promise to resolve
+    </h1>
+    <div class="post-meta"><span title='2026-02-10 11:31:00 -0300 -03'>February 10, 2026</span>&nbsp;|&nbsp;Translations:
+<ul class="i18n_list">
+    <li>
+        <a href="https://luizgfranca.github.io/blog/pt/posts/004/">🇧🇷</a>
+    </li>
+</ul>
+
+</div>
+  </header> 
+  <div class="post-content"><p>JavaScript&rsquo;s architecture wasn&rsquo;t designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable asynchronicity (like <code>Promises</code> or <code>async/await</code>), this is still evident from the lack of clarity of behavior in certain situations. This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.</p>
+<p>This is a story about one of those behaviors where JavaScript&rsquo;s nature, combined with developers&rsquo; understanding of how the language works, allows for less obvious problems to slip through unnoticed.</p>
+<h2 id="the-context">The Context<a hidden class="anchor" aria-hidden="true" href="#the-context">#</a></h2>
+<p>One day I got a bug report at work on one of the systems I&rsquo;d taken over. It&rsquo;s a batch job that converts promotion definitions from a specialized telecom product definition system to the Salesforce Commerce Cloud catalog.</p>
+<p>These promotions can involve both attributes common to generic e-commerce promotions (like product attributes, specific product combinations, discount coupons, discount amount or percentage), as well as attributes from the currently contracted product, like associated &ldquo;SVAs&rdquo; (additional value-added services), product type combinations, location, and customer attributes.</p>
+<p>The process basically works like this:</p>
+<ul>
+<li>Fetch the promotion from the product system API</li>
+<li>Separate attributes related to products, logged-in user data, and session-controlled data</li>
+<li>Search for discount coupons and select one if applicable</li>
+<li>Create a <code>Customer Group</code> with customer and session data requirements, and create a <code>Campaign</code> for it with the coupon rule if applicable</li>
+<li>Create a <code>Promotion</code> with product composition requirements</li>
+<li>Associate the <code>Promotion</code> with the created <code>Campaign</code></li>
+<li>Save them in a result that will be used to generate XML for importing</li>
+</ul>
+<p>This search to build the XML that gets imported into Salesforce Commerce Cloud is done through a class that implements the visitor design pattern, with a structure similar to this:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">class</span> <span class="nx">ProductSystemPromotionVisitor</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">private</span> <span class="nx">promotions</span><span class="o">:</span> <span class="nx">Promotion</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">private</span> <span class="nx">campaigns</span><span class="o">:</span> <span class="nx">Campaign</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">private</span> <span class="nx">assignments</span><span class="o">:</span> <span class="nx">CampaignAssignment</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * ...
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 */</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">async</span> <span class="nx">visitSystemPromotion</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="o">:</span> <span class="nx">ProductSystemPromotion</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * ...
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 */</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">async</span> <span class="nx">onFinish</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">generatePromotionsXML</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">			<span class="k">this</span><span class="p">.</span><span class="nx">promotions</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">			<span class="k">this</span><span class="p">.</span><span class="nx">campaigns</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">			<span class="k">this</span><span class="p">.</span><span class="nx">assignments</span>
+</span></span><span class="line"><span class="cl">		<span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The main batch process iterates through the promotions defined in the product system, and for each one found, it calls <code>visitSystemPromotion()</code> passing its definition. This method then creates the promotion and campaign objects and accumulates them in class variables. At the end of the batch process, the <code>onFinish()</code> function is called, generating the XML file with the accumulated data.</p>
+<p>Recently, the process had been enhanced with a new feature to include this discount coupon search.</p>
+<h2 id="the-problem">The Problem<a hidden class="anchor" aria-hidden="true" href="#the-problem">#</a></h2>
+<p>Given the context, we can now look at the details of the issue.</p>
+<p>A bug was reported in which certain promotions weren&rsquo;t being &ldquo;eligibilized&rdquo; correctly.</p>
+<p>Elibibilization is a process where the rules of promotions, properties of services selected, and characteristics of the customer are evaluated to see if the promotion should be applied or not.</p>
+<p>When investigating this, I found that one of the promotions had a campaign that wasn&rsquo;t compatible with it, so I decided to investigate <code>visitSystemPromotion</code>, where this association is made.</p>
+<p>Here&rsquo;s a simplified version of the method:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ts" data-lang="ts"><span class="line"><span class="cl">	<span class="kr">async</span> <span class="nx">visitSystemPromotion</span><span class="p">(</span><span class="nx">systemPromotion</span>: <span class="kt">ProductSystemPromotion</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">shouldGenerate</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="p">))</span> <span class="k">return</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">promotionAttrs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">processPomotionAttrs</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">couponDefinition</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">couponRepository</span><span class="p">.</span><span class="nx">findByAcronym</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="p">.</span><span class="nx">acronym</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">campaignAttrs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">processCampaignAttrs</span><span class="p">(</span><span class="nx">systemPromotion</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">coupon</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">generateCoupon</span><span class="p">(</span><span class="nx">couponDefinition</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">campaignAttrs</span><span class="p">.</span><span class="nx">coupon</span> <span class="o">=</span> <span class="nx">coupon</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">campaign</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createCampaign</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">campaignAttrs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">campaigns</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">campaign</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">promotion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createPromotion</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">promotionAttrs</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">promotions</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">promotion</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kr">const</span> <span class="nx">assignment</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createCampaignAssignment</span><span class="p">(</span><span class="nx">campaign</span><span class="p">,</span> <span class="nx">promotion</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">this</span><span class="p">.</span><span class="nx">assignments</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">assignment</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span></code></pre></div><p>Knowing that the coupon configuration feature had been done recently, it wasn&rsquo;t hard to figure out where to look, and consequently why the problem happened. The <code>await</code> added to load the coupons inside the <code>async</code> method that had no <code>await</code> before.</p>
+<p>The issue with this code is caused because <code>await</code> only suspends code in the method <strong>under</strong> it <strong>at least</strong> until the <code>Promise</code> resolves. Meanwhile, other tasks can execute freely.</p>
+<p>And that&rsquo;s what was happening. The campaign attributes in <code>this.promotionAttrs</code> were being replaced by another promotion&rsquo;s attributes since another promotion was visited while still waiting for the completion of the repository query and the next orchestration of the rest of the method.</p>
+<p>Beyond the clear bad practice of trying to store local state inside a global object, which contributed for the bug to happen, this problem relates to a common misconception that&rsquo;s frequently spread when we talk about JavaScript: the claim that <code>await</code> &ldquo;waits&rdquo; for the result of the call it makes, which is very different from reality.</p>
+<h2 id="what-asyncawait-actually-is">What async/await Actually Is<a hidden class="anchor" aria-hidden="true" href="#what-asyncawait-actually-is">#</a></h2>
+<p><code>async</code> and <code>await</code> are really just a more ergonomic way to execute functionality that already exists in the language. In this case, this syntax is an alternative to the Promise API.</p>
+<p>For example, considering that <code>a()</code> and <code>b()</code> are two functions that return promises</p>
+<p>The code below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">await</span> <span class="nx">a</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="kr">await</span> <span class="nx">b</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>In practice executes the same functionality as this expansion using the Promise API (ignoring exception cases)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">_</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">a</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">b</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="nx">resolve</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">		<span class="p">})</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>This means we&rsquo;re only defining a simple happens-before relationship between <code>a()</code> and <code>b()</code>. Any code that&rsquo;s not inside this relationship is technically concurrent and can execute between the two calls.</p>
+<p>This happens because of the mechanism the Event Loop uses to optimize the execution of code that runs concurrently.</p>
+<p>To avoid sitting idle while there are tasks to execute, it organizes promises that are candidates to be executed in the next tick into a queue called the &ldquo;microtask queue.&rdquo;</p>
+<p>When a promise can be executed, for instance in the case of a network call when the response is received from the server, the appropriate code, whether the callback defined in <code>then</code> or <code>catch</code>, is added to the end of this queue.</p>
+<p>This architecture allows the V8 (in Node.js&rsquo;s case) to always stay busy with something useful unless there&rsquo;s no code that can be executed. This was one of the advantages that helped Node.js become popular, since it can handle multiple concurrent requests using the same OS thread to execute its logic.</p>
+<p>This is an approach with several advantages that was even adopted by other ecosystems, like Java and its recent addition of Virtual Threads, with the difference that Java already had better abstractions for handling concurrency, so this kind of problem is less likely to happen with it.</p>
+<p>There&rsquo;s a talk that, despite being old, I watched a while back and helped me build a better mental model of how asynchronous behaviors work in Node.js, and I&rsquo;d highly recommend watching it: <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ&amp;t=31s">https://www.youtube.com/watch?v=8aGhZQkoFbQ&t=31s</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://luizgfranca.github.io/blog/posts/003/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Why not all your successful fetch calls might have actually hit your server</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://luizgfranca.github.io/blog/">Luiz G. França</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

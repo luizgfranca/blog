@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Luiz G. França</description>
     <generator>Hugo -- 0.155.3</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 19 Jun 2025 16:59:50 -0300</lastBuildDate>
+    <lastBuildDate>Tue, 10 Feb 2026 11:31:00 -0300</lastBuildDate>
     <atom:link href="https://luizgfranca.github.io/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The await from Javascript does not &#34;wait&#34; for a promise to resolve</title>
+      <link>https://luizgfranca.github.io/blog/posts/004/</link>
+      <pubDate>Tue, 10 Feb 2026 11:31:00 -0300</pubDate>
+      <guid>https://luizgfranca.github.io/blog/posts/004/</guid>
+      <description>&lt;p&gt;JavaScript&amp;rsquo;s architecture wasn&amp;rsquo;t designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable asynchronicity (like &lt;code&gt;Promises&lt;/code&gt; or &lt;code&gt;async/await&lt;/code&gt;), this is still evident from the lack of clarity of behavior in certain situations. This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Why not all your successful fetch calls might have actually hit your server</title>
       <link>https://luizgfranca.github.io/blog/posts/003/</link>

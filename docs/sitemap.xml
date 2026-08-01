@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  
-  <sitemap>
-    <loc>https://luizgfranca.github.io/blog/en/sitemap.xml</loc>
-    
-      <lastmod>2026-02-10T11:31:00-03:00</lastmod>
-    
-  </sitemap>
-  
-  <sitemap>
-    <loc>https://luizgfranca.github.io/blog/pt/sitemap.xml</loc>
-    
-      <lastmod>2026-02-10T11:31:00-03:00</lastmod>
-    
-  </sitemap>
-  
+	
+		<sitemap>
+			<loc>https://luizgfranca.github.io/blog/en/sitemap.xml</loc>
+			
+				<lastmod>2026-07-31T23:45:53-03:00</lastmod>
+			
+		</sitemap>
+	
+		<sitemap>
+			<loc>https://luizgfranca.github.io/blog/pt/sitemap.xml</loc>
+			
+				<lastmod>2026-07-31T23:45:53-03:00</lastmod>
+			
+		</sitemap>
+	
 </sitemapindex>

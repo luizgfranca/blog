@@ -4,10 +4,19 @@
     <title>Posts on Luiz G. França</title>
     <link>https://luizgfranca.github.io/blog/pt/posts/</link>
     <description>Recent content in Posts on Luiz G. França</description>
-    <generator>Hugo -- 0.155.3</generator>
+    <generator>Hugo -- 0.164.0</generator>
     <language>pt</language>
-    <lastBuildDate>Tue, 10 Feb 2026 11:31:00 -0300</lastBuildDate>
+    <lastBuildDate>Fri, 31 Jul 2026 23:45:53 -0300</lastBuildDate>
     <atom:link href="https://luizgfranca.github.io/blog/pt/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pequenas automações</title>
+      <link>https://luizgfranca.github.io/blog/pt/posts/005/</link>
+      <pubDate>Fri, 31 Jul 2026 23:45:53 -0300</pubDate>
+      <guid>https://luizgfranca.github.io/blog/pt/posts/005/</guid>
+      <description>&lt;p&gt;Ha um pouco de tempo eu mudei de emulador de terminal para o Kitty. Porém uma das coisas que senti muita falta nele foi o tmux-sessionizer, que eu usava frequentemente.&lt;/p&gt;
+&lt;p&gt;Ele é uma ferramenta simples que com um atalho de teclado ou com um alias lista os projetos dentro de diretórios relevantes e os mostra em uma lista para selecionar e abri-los.&lt;/p&gt;
+&lt;p&gt;A verdade é que provavelmente sem a facilidade de navegação que ele traz eu provavelmente nunca teria começado a usar o terminal tanto quanto uso atualmente. Porque precisar ficar digitando comandos o tempo todo para entrar em um projeto pode ser um pouco chato, e é exatamente o tipo de atrito pequeno que te desanima de abrir uma ferramenta que no final pode ser muito melhor.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>O await do javascript não &#34;espera&#34; que sua Promise se complete</title>
       <link>https://luizgfranca.github.io/blog/pt/posts/004/</link>

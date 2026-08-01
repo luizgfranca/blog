@@ -4,16 +4,26 @@
     <title>Luiz G. França</title>
     <link>https://luizgfranca.github.io/blog/</link>
     <description>Recent content on Luiz G. França</description>
-    <generator>Hugo -- 0.155.3</generator>
-    <language>en</language>
-    <lastBuildDate>Tue, 10 Feb 2026 11:31:00 -0300</lastBuildDate>
+    <generator>Hugo -- 0.164.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 31 Jul 2026 23:45:53 -0300</lastBuildDate>
     <atom:link href="https://luizgfranca.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>The await from Javascript does not &#34;wait&#34; for a promise to resolve</title>
+      <title>Pequenas automações</title>
+      <link>https://luizgfranca.github.io/blog/posts/005/</link>
+      <pubDate>Fri, 31 Jul 2026 23:45:53 -0300</pubDate>
+      <guid>https://luizgfranca.github.io/blog/posts/005/</guid>
+      <description>&lt;p&gt;Ha um pouco de tempo eu mudei de emulador de terminal para o Kitty. Porém uma das coisas que senti muita falta nele foi o tmux-sessionizer, que eu usava frequentemente.&lt;/p&gt;
+&lt;p&gt;Ele é uma ferramenta simples que com um atalho de teclado ou com um alias lista os projetos dentro de diretórios relevantes e os mostra em uma lista para selecionar e abri-los.&lt;/p&gt;
+&lt;p&gt;A verdade é que provavelmente sem a facilidade de navegação que ele traz eu provavelmente nunca teria começado a usar o terminal tanto quanto uso atualmente. Porque precisar ficar digitando comandos o tempo todo para entrar em um projeto pode ser um pouco chato, e é exatamente o tipo de atrito pequeno que te desanima de abrir uma ferramenta que no final pode ser muito melhor.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Why &#34;await&#34; from Javascript does not &#34;wait&#34; for a promise to resolve</title>
       <link>https://luizgfranca.github.io/blog/posts/004/</link>
       <pubDate>Tue, 10 Feb 2026 11:31:00 -0300</pubDate>
       <guid>https://luizgfranca.github.io/blog/posts/004/</guid>
-      <description>&lt;p&gt;JavaScript&amp;rsquo;s architecture wasn&amp;rsquo;t designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable asynchronicity (like &lt;code&gt;Promises&lt;/code&gt; or &lt;code&gt;async/await&lt;/code&gt;), this is still evident from the lack of clarity of behavior in certain situations. This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.&lt;/p&gt;</description>
+      <description>&lt;p&gt;JavaScript&amp;rsquo;s architecture wasn&amp;rsquo;t designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable concurrency (like &lt;code&gt;Promises&lt;/code&gt; or &lt;code&gt;async/await&lt;/code&gt;), this is still evident from the lack of clarity of behavior in certain situations.&lt;/p&gt;
+&lt;p&gt;This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Why not all your successful fetch calls might have actually hit your server</title>

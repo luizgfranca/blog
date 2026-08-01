@@ -1,18 +1,20 @@
 +++
-title = 'The await from Javascript does not "wait" for a promise to resolve'
+title = 'Why "await" from Javascript does not "wait" for a promise to resolve'
 date = 2026-02-10T11:31:00-03:00
 draft = false
 +++
 
-JavaScript's architecture wasn't designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable asynchronicity (like `Promises` or `async/await`), this is still evident from the lack of clarity of behavior in certain situations. This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.
+JavaScript's architecture wasn't designed from the ground up with asynchronous execution in mind, and even with the addition of features that enable concurrency (like `Promises` or `async/await`), this is still evident from the lack of clarity of behavior in certain situations. 
 
-This is a story about one of those behaviors where JavaScript's nature, combined with developers' understanding of how the language works, allows for less obvious problems to slip through unnoticed.
+This leads many developers to have incorrect expectations about what will happen when their code runs. The problem is further amplified by the amount of content we have nowdays that, in well-intentioned attempts to simplify language concepts for educational purposes, end up spreading misconceptions.
+
+This is a story about one of those behaviors when JavaScript's nature, combined with developers' understanding of how the language works, allows for less obvious issues to slip through unnoticed.
 
 ## The Context
 
-One day I got a bug report at work on one of the systems I'd taken over. It's a batch job that converts promotion definitions from a specialized telecom product definition system to the Salesforce Commerce Cloud catalog.
+One day I got a bug report at work on one of the systems I'd taken over. It's a batch job that converts promotion definitions from a bespoke telco product definition system to the Salesforce Commerce Cloud catalog.
 
-These promotions can involve both attributes common to generic e-commerce promotions (like product attributes, specific product combinations, discount coupons, discount amount or percentage), as well as attributes from the currently contracted product, like associated "SVAs" (additional value-added services), product type combinations, location, and customer attributes.
+These promotions can involve both attributes common to generic e-commerce promotions (like product attributes, specific product combinations, discount coupons, discount amount or percentage), as well as attributes from services the user is currently subscribed to, like associated "SVAs" (additional value-added services), product type combinations, location, and customer attributes.
 
 The process basically works like this:
 - Fetch the promotion from the product system API
@@ -60,7 +62,7 @@ A bug was reported in which certain promotions weren't being "eligibilized" corr
 
 Elibibilization is a process where the rules of promotions, properties of services selected, and characteristics of the customer are evaluated to see if the promotion should be applied or not.
 
-When investigating this, I found that one of the promotions had a campaign that wasn't compatible with it, so I decided to investigate `visitSystemPromotion`, where this association is made.
+When investigating this, I found out that one of the promotions had a campaign that wasn't compatible with it, so I decided to investigate `visitSystemPromotion`, where this association is made.
 
 Here's a simplified version of the method:
 ```ts

@@ -1,6 +1,9 @@
 baseURL: https://luizgfranca.github.io/blog
 languageCode: en-us
 title: Luiz G. França
+author:
+  name: "Luiz G França"
+  email: "luizgfc@proton.me"
 theme: ["PaperMod"]
 publishDir: "docs"
 enableEmoji: true
